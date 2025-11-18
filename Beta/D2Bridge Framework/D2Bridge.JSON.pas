@@ -555,7 +555,7 @@ begin
                 //lJSONWriter.WritePropertyName(ADataSet.Fields[lCols].FieldName);
                 if ADataSet.Fields[lCols].IsNull then
                   case ADataSet.Fields[lCols].DataType of
-                    // n�mericos
+                    // númericos
                     ftFloat{$IFDEF SUPPORTS_FTEXTENDED}, ftCurrency, ftExtended{$ENDIF}, ftFMTBcd,
                     ftSmallint{$IFDEF SUPPORTS_FTEXTENDED}, ftShortint, ftSingle{$ENDIF}, ftWord, ftInteger, ftAutoInc,
                     ftLargeint{$IFDEF SUPPORTS_FTEXTENDED}, ftLongWord{$ENDIF}, ftBCD:
@@ -635,7 +635,7 @@ begin
                         else
                           lJSONObject.AddPair(lColName, GetTJSONFalse);
                       end;
-                    // n�mericos
+                    // númericos
                     ftFloat{$IFDEF SUPPORTS_FTEXTENDED}, ftExtended{$ENDIF}, ftFMTBcd, ftBCD:
                     begin
                       if (ADataSet.Fields[lCols] as TNumericField).DisplayFormat <> '' then
