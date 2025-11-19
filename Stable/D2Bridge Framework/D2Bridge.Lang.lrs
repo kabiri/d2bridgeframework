@@ -2145,3 +2145,84 @@ LazarusResources.Add('D2Bridge_Lang_uk_UA','JSON',[
   +#128#209#150#209#130#209#140' '#209#129#208#191#209#128#208#190#208#177#209
   +#131'."'#13#10'    }'#13#10'}'
 ]);
+LazarusResources.Add('D2Bridge_Lang_pl_PL','JSON',[
+  '{'#13#10'    "Button": {'#13#10'        "CaptionSave": "Zapisz",'#13#10'    '
+  +'    "CaptionEdit": "Edytuj",'#13#10'        "CaptionDelete": "Usu'#197#132
+  +'",'#13#10'        "CaptionCancel": "Anuluj",'#13#10'        "CaptionClose":'
+  +' "Zamknij",'#13#10'        "CaptionSearch": "Szukaj",'#13#10'        "Capti'
+  +'onOpen": "Otw'#195#179'rz",'#13#10'        "CaptionSelect": "Wybierz",'#13
+  +#10'        "CaptionAdd": "Dodaj",'#13#10'        "CaptionOptions": "Opcje",'
+  +#13#10'        "CaptionConfig": "Konfiguruj",'#13#10'        "CaptionMenu": '
+  +'"Menu",'#13#10'        "CaptionRefresh": "Od'#197#155'wie'#197#188'",'#13#10
+  +'        "CaptionCut": "Wytnij",'#13#10'        "CaptionCopy": "Kopiuj",'#13
+  +#10'        "CaptionShare": "Udost'#196#153'pnij",'#13#10'        "CaptionPo'
+  +'wer": "W'#197#130#196#133'cz",'#13#10'        "CaptionPrint": "Drukuj",'#13
+  +#10'        "CaptionView": "Widok",'#13#10'        "CaptionUpload": "Prze'
+  +#197#155'lij",'#13#10'        "CaptionDownload": "Pobierz"'#13#10'    },'#13
+  +#10'    "MessageButton": {'#13#10'        "ButtonYes": "Tak",'#13#10'       '
+  +' "ButtonNo": "Nie",'#13#10'        "ButtonOk": "Ok",'#13#10'        "Button'
+  +'Cancel": "Anuluj",'#13#10'        "ButtonAbort": "Przerwij",'#13#10'       '
+  +' "ButtonRetry": "Pon'#195#179'w",'#13#10'        "ButtonIgnore": "Ignoruj",'
+  +#13#10'        "ButtonAll": "Wszystko",'#13#10'        "ButtonNoToAll": "Nie'
+  +' dla wszystkich",'#13#10'        "ButtonYesToAll": "Tak dla wszystkich",'#13
+  +#10'        "ButtonmrHelp": "Pomoc",'#13#10'        "ButtonmrClose": "Zamkni'
+  +'j"'#13#10'    },'#13#10'    "MessageType": {'#13#10'        "TypeWarning": '
+  +'"Ostrze'#197#188'enie",'#13#10'        "TypeError": "B'#197#130#196#133'd",'
+  +#13#10'        "TypeSuccess": "Sukces",'#13#10'        "TypeInfo": "Informac'
+  +'ja",'#13#10'        "TypeQuestion": "Pytanie",'#13#10'        "TypeInformat'
+  +'ion": "Informacja"'#13#10'    },'#13#10'    "Upload": {'#13#10'        "Cap'
+  +'tionInput": "Dotknij, aby wybra'#196#135' plik",'#13#10'        "ButtonClea'
+  +'r": "Wyczy'#197#155#196#135'",'#13#10'        "ButtonUpload": "Prze'#197#155
+  +'lij",'#13#10'        "MsgSuccessUpload": "Pliki wys'#197#130'ano pomy'#197
+  +#155'lnie!",'#13#10'        "MsgErrorNoFileSelect": "Nie wybrano '#197#188'a'
+  +'dnych plik'#195#179'w",'#13#10'        "MsgErrorManyFileSelected": "Mo'#197
+  +#188'esz wybra'#196#135' maksymalnie ${maxFileCount} plik'#195#179'w.",'#13
+  +#10'        "MsgErrorFileSize": "Plik ${files[i].name} przekracza maksymalny'
+  +' dozwolony rozmiar.",'#13#10'        "MsgErrorTotalFilesSize": "Ca'#197#130
+  +'kowity rozmiar wybranych plik'#195#179'w przekracza dozwolony limit.",'#13
+  +#10'        "MsgErrorFileType": "Typ pliku ${files[i].name} jest niedozwolon'
+  +'y.",'#13#10'        "MsgErrorOnUpload": "Wyst'#196#133'pi'#197#130' b'#197
+  +#130#196#133'd podczas przesy'#197#130'ania plik'#195#179'w."'#13#10'    },'
+  +#13#10'    "Combobox": {'#13#10'        "Select": "Wybierz"'#13#10'    },'#13
+  +#10'    "Grid": {'#13#10'        "MsgErrorCellNoneValue": "Warto'#197#155#196
+  +#135' w kolumnie %s nie zosta'#197#130'a zaakceptowana, wprowad'#197#186' pr'
+  +'awid'#197#130'ow'#196#133' warto'#197#155#196#135' i spr'#195#179'buj ponow'
+  +'nie",'#13#10'        "MsgErrorCellValue": "Warto'#197#155#196#135' \"%s\" n'
+  +'ie zosta'#197#130'a zaakceptowana w kolumnie %s, wprowad'#197#186' prawid'
+  +#197#130'ow'#196#133' warto'#197#155#196#135' i spr'#195#179'buj ponownie",'
+  +#13#10'        "FooterRecordText": "Rekord {0} - {1} z {2}",'#13#10'        '
+  +'"FooterRecordPageText": "Strona {0} z {1}",'#13#10'        "EmptyRecords": '
+  +'"Brak rekord'#195#179'w do wy'#197#155'wietlenia",'#13#10'        "LoadingD'
+  +'ata": "'#197#129'adowanie danych..."'#13#10'    },'#13#10'    "Loader": {'
+  +#13#10'        "WaitText": "Czekaj"'#13#10'    },'#13#10'    "Error500": {'
+  +#13#10'        "Title": "UTRACONO PO'#197#129#196#132'CZENIE",'#13#10'      '
+  +'  "Text": "Utracono po'#197#130#196#133'czenie z serwerem. Po'#197#130#196
+  +#133'czenie zostanie automatycznie przywr'#195#179'cone, gdy serwer b'#196
+  +#153'dzie online"'#13#10'    },'#13#10'    "Messages": {'#13#10'        "Ses'
+  +'sionIdleTimeOut": "Twoja sesja wkr'#195#179'tce zostanie zako'#197#132'czon'
+  +'a z powodu braku aktywno'#197#155'ci"'#13#10'    },'#13#10'    "Error429": '
+  +'{'#13#10'        "Title": "Zbyt wiele po'#197#130#196#133'cze'#197#132'",'
+  +#13#10'        "Text1": "Przekroczono limit po'#197#130#196#133'cze'#197#132
+  +'. Prosz'#196#153' czeka'#196#135'",'#13#10'        "Text2": "sekund, na kol'
+  +'ejn'#196#133' pr'#195#179'be po'#197#130#196#133'czenia."'#13#10'    },'#13
+  +#10'    "ErrorBlacklist": {'#13#10'        "Title": "Adres IP Zablokowany",'
+  +#13#10'        "SubTitle1": "Tw'#195#179'j adres IP",'#13#10'        "SubTit'
+  +'le2": "znajduje si'#196#153' aktualnie na czarnej li'#197#155'cie. Je'#197
+  +#155'li uwa'#197#188'asz, '#197#188'e jest to b'#197#130#196#133'd, mo'#197
+  +#188'esz poprosi'#196#135' o usuni'#196#153'cie z listy, wpisuj'#196#133'c p'
+  ,'oni'#197#188'ej sw'#195#179'j adres IP.",'#13#10'        "YourIP" : "Tw'#195
+  +#179'j adres IP",'#13#10'        "DelistIP" : "Usu'#197#132' IP z listy",'#13
+  +#10'        "MsgTimeOut" : "Sesja wygas'#197#130'a. Kliknij OK, aby od'#197
+  +#155'wie'#197#188'y'#196#135' stron'#196#153' i spr'#195#179'bowa'#196#135' '
+  +'ponownie.",'#13#10'        "MsgWrongIP" : "Adres IP wydaje si'#196#153' by'
+  +#196#135' niepoprawny",'#13#10'        "MsgDelistSuccess" : "Pomy'#197#155'l'
+  +'nie przetworzono '#197#188#196#133'danie usuni'#196#153'cia IP ${ipAddress}'
+  +' z listy. Od'#197#155'wie'#197#188'anie...",'#13#10'        "MsgDelistFaile'
+  +'d" : "Nie uda'#197#130'o si'#196#153' przetworzy'#196#135' '#197#188#196#133
+  +'dania usuni'#196#153'cia IP ${ipAddress} z listy. Spr'#195#179'buj ponownie'
+  +' p'#195#179#197#186'niej.",'#13#10'        "MsgDelistError" : "Wyst'#196#133
+  +'pi'#197#130' b'#197#130#196#133'd podczas przetwarzania '#197#188#196#133'd'
+  +'ania. Spr'#195#179'buj ponownie p'#195#179#197#186'niej.",'#13#10'        "'
+  +'MsgInvalidIp" : "Nieprawid'#197#130'owy adres IP. Sprawd'#197#186' i spr'
+  +#195#179'buj ponownie."'#13#10'    }    '#13#10'}'
+]);

@@ -69,7 +69,8 @@ type
    Romanian,
    Persian,
    Thai,
-   Ukrainian);
+   Ukrainian,
+   Polish);
 
  TD2BridgeLangs = set of TD2BridgeLang;
 

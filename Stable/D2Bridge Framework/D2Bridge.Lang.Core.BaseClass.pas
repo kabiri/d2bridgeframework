@@ -64,6 +64,7 @@ type
    FPersian: ID2BridgeLang;
    FThai: ID2BridgeLang;
    FUkrainian: ID2BridgeLang;
+   FPolish: ID2BridgeLang;
 
    FLanguages: TD2BridgeLangs;
    FPathExportJSON: string;
@@ -108,6 +109,8 @@ type
    procedure SetThai(Avalue: ID2BridgeLang);
    function GetUkrainian: ID2BridgeLang;
    procedure SetUkrainian(const Value: ID2BridgeLang);
+   function GetPolish: ID2BridgeLang;
+   procedure SetPolish(const Value: ID2BridgeLang);
 
    function GetLanguages: TD2BridgeLangs;
    procedure SetLanguages(SetOfLanguages: TD2BridgeLangs);
@@ -152,6 +155,7 @@ type
    property Persian: ID2BridgeLang read GetPersian write SetPersian;
    property Thai: ID2BridgeLang read GetThai write SetThai;
    property Ukrainian: ID2BridgeLang read GetUkrainian write SetUkrainian;
+   property Polish: ID2BridgeLang read GetPolish write SetPolish;
 
    property Languages: TD2BridgeLangs read GetLanguages write SetLanguages;
 
@@ -174,7 +178,7 @@ uses
   D2Bridge.Lang.Italian, D2Bridge.Lang.French, D2Bridge.Lang.German, D2Bridge.Lang.Japanese,
   D2Bridge.Lang.Russian, D2Bridge.Lang.Chinese, D2Bridge.Lang.Czech, D2Bridge.Lang.Turkish,
   D2Bridge.Lang.Korean, D2Bridge.Lang.Romanian, D2Bridge.Lang.Persian, D2Bridge.Lang.Thai,
-  D2Bridge.Lang.Ukrainian;
+  D2Bridge.Lang.Ukrainian, D2Bridge.Lang.Polish;
 
 
 { TD2BridgeLangCoreBaseClass }
@@ -260,6 +264,8 @@ begin
     Result:= Ukrainian;
   TD2BridgeLang.Thai :
     Result:= Thai;
+  TD2BridgeLang.Polish :
+    Result:= Polish;
  end;
 end;
 
@@ -323,6 +329,9 @@ begin
 
  if Assigned(FUkrainian) then
   (FUkrainian as TD2BridgeLangBaseClass).Free;
+
+ if Assigned(FPolish) then
+  (FPolish as TD2BridgeLangBaseClass).Free;
 
  FLanguages:= [];
 
@@ -442,6 +451,11 @@ end;
 function TD2BridgeLangCoreBaseClass.GetUkrainian: ID2BridgeLang;
 begin
  result:= FUkrainian;
+end;
+
+function TD2BridgeLangCoreBaseClass.GetPolish: ID2BridgeLang;
+begin
+ result:= FPolish;
 end;
 
 procedure TD2BridgeLangCoreBaseClass.IncludeLogMissing(AContext: string; ATerm: string; AInformation: string = '');
@@ -681,6 +695,8 @@ begin
        FThai:= TD2BridgeLangThai.Create(self, FD2BridgeTermClass);
      TD2BridgeLang.Ukrainian :
        FUkrainian:= TD2BridgeLangUkrainian.Create(self, FD2BridgeTermClass);
+     TD2BridgeLang.Polish :
+       FPolish:= TD2BridgeLangPolish.Create(self, FD2BridgeTermClass);
     end;
    end;
  end;
@@ -755,6 +771,13 @@ begin
  FUkrainian:= Value;
 
  Include(FLanguages, TD2BridgeLang.Ukrainian);
+end;
+
+procedure TD2BridgeLangCoreBaseClass.SetPolish(const Value: ID2BridgeLang);
+begin
+ FPolish:= Value;
+
+ Include(FLanguages, TD2BridgeLang.Polish);
 end;
 
 end.
