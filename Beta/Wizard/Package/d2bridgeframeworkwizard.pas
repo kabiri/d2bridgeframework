@@ -8,29 +8,38 @@ unit d2bridgeframeworkwizard;
 interface
 
 uses
-  D2Bridge.NewProject.Wizard.FPC, D2Bridge.NewForm.Wizard.FPC, 
-  D2Bridge.NewDataModule.Wizard.FPC, D2Bridge.NewInheritedForm.Wizard.FPC, 
-  D2Bridge.NewCrud.Wizard.FPC, D2Bridge.NewForm.Wizard.Commom, 
-  D2Bridge.ConfigNewCRUD.View, D2Bridge.ConfigNewInheritedForm.View, 
-  D2Bridge.ConfigNewProject.View, D2Bridge.NewProject.Wizard.Common, 
-  D2Bridge.BuildEvents, LazarusPackageIntf;
+ D2Bridge.NewProject.Wizard.FPC, D2Bridge.NewForm.Wizard.FPC, 
+ D2Bridge.NewDataModule.Wizard.FPC, D2Bridge.NewInheritedForm.Wizard.FPC, 
+ D2Bridge.NewCrud.Wizard.FPC, D2Bridge.NewRestAPIUnit.Wizard, 
+ D2Bridge.NewRestAPIClassUnit.Wizard, D2Bridge.NewRestAPIAuthUnit.Wizard, 
+ D2Bridge.NewRestAPISession.Wizard, D2Bridge.NewForm.Wizard.Commom, 
+ D2Bridge.ConfigNewCRUD.View, D2Bridge.ConfigNewInheritedForm.View, 
+ D2Bridge.ConfigNewProject.View, D2Bridge.NewProject.Wizard.Common, 
+ D2Bridge.BuildEvents, LazarusPackageIntf;
 
 implementation
 
 procedure Register;
 begin
   RegisterUnit('D2Bridge.NewProject.Wizard.FPC', 
-    @D2Bridge.NewProject.Wizard.FPC.Register);
+   @D2Bridge.NewProject.Wizard.FPC.Register);
   RegisterUnit('D2Bridge.NewForm.Wizard.FPC', 
-    @D2Bridge.NewForm.Wizard.FPC.Register);
+   @D2Bridge.NewForm.Wizard.FPC.Register);
   RegisterUnit('D2Bridge.NewDataModule.Wizard.FPC', 
-    @D2Bridge.NewDataModule.Wizard.FPC.Register);
+   @D2Bridge.NewDataModule.Wizard.FPC.Register);
   RegisterUnit('D2Bridge.NewInheritedForm.Wizard.FPC', 
-    @D2Bridge.NewInheritedForm.Wizard.FPC.Register);
+   @D2Bridge.NewInheritedForm.Wizard.FPC.Register);
   RegisterUnit('D2Bridge.NewCrud.Wizard.FPC', 
-    @D2Bridge.NewCrud.Wizard.FPC.Register);
-  RegisterUnit('D2Bridge.BuildEvents',
-    @D2Bridge.BuildEvents.Register);
+   @D2Bridge.NewCrud.Wizard.FPC.Register);
+  RegisterUnit('D2Bridge.NewRestAPIUnit.Wizard', 
+   @D2Bridge.NewRestAPIUnit.Wizard.Register);
+  RegisterUnit('D2Bridge.NewRestAPIClassUnit.Wizard', 
+   @D2Bridge.NewRestAPIClassUnit.Wizard.Register);
+  RegisterUnit('D2Bridge.NewRestAPIAuthUnit.Wizard', 
+   @D2Bridge.NewRestAPIAuthUnit.Wizard.Register);
+  RegisterUnit('D2Bridge.NewRestAPISession.Wizard', 
+   @D2Bridge.NewRestAPISession.Wizard.Register);
+  RegisterUnit('D2Bridge.BuildEvents', @D2Bridge.BuildEvents.Register);
 end;
 
 initialization

@@ -2,6 +2,10 @@ unit <UNITNAME>;
 
 { Copyright <COPYRIGHTYEAR> D2Bridge Framework by Talis Jonatas Gomes }
 
+{$IFDEF FPC}
+{$mode delphi}{$H+}
+{$ENDIF}  
+
 interface
 
 uses
@@ -25,7 +29,7 @@ end;
 initialization
 //Register EndPoints
 {
-  AddGet('/api/ping', GetPing);
+  AddGet('/api/ping', @GetPing);
 }
 
 end.
