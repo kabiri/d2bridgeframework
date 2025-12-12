@@ -14,8 +14,8 @@ uses
  D2Bridge.NewRestAPIClassUnit.Wizard, D2Bridge.NewRestAPIAuthUnit.Wizard, 
  D2Bridge.NewRestAPISession.Wizard, D2Bridge.NewForm.Wizard.Commom, 
  D2Bridge.ConfigNewCRUD.View, D2Bridge.ConfigNewInheritedForm.View, 
- D2Bridge.ConfigNewProject.View, D2Bridge.NewProject.Wizard.Common, 
- D2Bridge.BuildEvents, LazarusPackageIntf;
+ D2Bridge.ConfigNewProject.View, D2Bridge.ConfigNewUnit.View, 
+ D2Bridge.NewProject.Wizard.Common, D2Bridge.BuildEvents, LazarusPackageIntf;
 
 implementation
 

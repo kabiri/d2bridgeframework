@@ -55,7 +55,7 @@ Email: talisjonatas@me.com"/>
 
   God bless you
  +--------------------------------------------------------------------------+"/>
-    <Version Major="2" Minor="3"/>
+    <Version Major="2" Minor="31"/>
     <Files>
       <Item>
         <Filename Value="Lazarus\d2bridge.newproject.wizard.fpc.pas"/>
@@ -145,6 +145,14 @@ Email: talisjonatas@me.com"/>
       <Item>
         <Filename Value="Commom\Forms\D2Bridge.ConfigNewProject.View.pas"/>
         <UnitName Value="D2Bridge.ConfigNewProject.View"/>
+      </Item>
+      <Item>
+        <Filename Value="Commom\Forms\D2Bridge.ConfigNewUnit.View.pas"/>
+        <UnitName Value="D2Bridge.ConfigNewUnit.View"/>
+      </Item>
+      <Item>
+        <Filename Value="Commom\Forms\D2Bridge.ConfigNewUnit.View.lfm"/>
+        <Type Value="LFM"/>
       </Item>
       <Item>
         <Filename Value="Commom\D2Bridge.NewProject.Wizard.Common.pas"/>

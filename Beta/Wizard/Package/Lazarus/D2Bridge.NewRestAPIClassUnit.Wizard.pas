@@ -40,18 +40,24 @@ interface
 uses
   Classes, SysUtils, ProjectIntf, Dialogs, LazIDEIntf, DateUtils, Forms,
   LazFileUtils, System.UITypes,
-  D2Bridge.Wizard.Util;
+  D2Bridge.Wizard.Util,
+  D2Bridge.ConfigNewUnit.View;
 
 type
 
  { TD2BridgeNewRestAPIClassUnitWizard }
 
  TD2BridgeNewRestAPIClassUnitWizard = class (TProjectFileDescriptor)
+ private
+  FNewUnitForm: TD2BridgeConfigNewUnitForm;
+  FClassName: string;
+  FUnitName: string;
  protected
   function Init(var NewFilename: string; NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult; override;
   function Initialized({%H-}NewFile: TLazProjectFile): TModalResult; override;
  public
   constructor Create; override;
+  destructor Destroy; override;
   function CreateSource(const Filename     : string;
                         const SourceName   : string;
                         const ResourceName : string): string; override;
@@ -74,6 +80,14 @@ begin
  UseCreateFormStatements:= false;
  IsPascalUnit:= True;
  Name := 'D2BridgeWizardAPINewUnit2'; //CFileDescritor
+ FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
+end;
+
+destructor TD2BridgeNewRestAPIClassUnitWizard.Destroy;
+begin
+ FNewUnitForm.Free;
+
+ inherited Destroy;
 end;
 
 function TD2BridgeNewRestAPIClassUnitWizard.Init(var NewFilename: string;
@@ -89,6 +103,23 @@ begin
   MessageDlg('Path of D2Bridge Framework is not been configured', mterror, [mbok], 0);
   exit;
  end;
+
+ FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API';
+ FNewUnitForm.Edit_ClassName.Text:= 'TAPIFile';
+ FNewUnitForm.ShowModal;
+
+ if not FNewUnitForm.EnableCreateNewUnit then
+ begin
+  result:= mrAbort;
+  exit;
+ end;
+
+ //Fix ClassName and UnitName
+ FClassName:= FNewUnitForm.Edit_ClassName.Text;
+ if FClassName.StartsWith('T') then
+  FClassName:= Copy(FClassName, 2, 99999999);
+ FUnitName:= FClassName;
+
 
  Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
  //ResourceClass:= TForm;
@@ -124,7 +155,7 @@ begin
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<ServerController>', GetUsesServerControllerName,[rfIgnoreCase]);
 
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<UNITNAME>', SourceName, [rfIgnoreCase, rfReplaceAll]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', ResourceName, [rfIgnoreCase, rfReplaceAll]);
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', FClassName, [rfIgnoreCase, rfReplaceAll]);
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASSINHERITED>', 'TD2BridgeForm', [rfIgnoreCase, rfReplaceAll]);
 
  result:= sNewFormPASContent;
