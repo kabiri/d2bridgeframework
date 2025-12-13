@@ -33,14 +33,27 @@
 
 unit D2Bridge.ConfigNewUnit.View;
 
+{$IFDEF FPC}
+  {$MODE Delphi}
+{$ENDIF}
+
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Imaging.pngimage,
-  Vcl.ExtCtrls;
+ SysUtils, Variants, Classes, IniFiles, Forms, Controls, Graphics,
+ Dialogs, ExtCtrls, StdCtrls, Generics.Collections,
+{$IFnDEF FPC}
+ Winapi.Windows, Winapi.Messages, Vcl.Imaging.pngimage,
+ {$IFDEF DESIGNMODE}DesignIntf, ToolsAPI, DesignEditors,{$ENDIF}
+{$ELSE}
+ LazFileUtils, FileUtil, ProjectIntf, LazIDEIntf, RegExpr,
+{$ENDIF}
+ D2Bridge.Wizard.Util, D2Bridge.Wizard.Types;
 
 type
+
+  { TD2BridgeConfigNewUnitForm }
+
   TD2BridgeConfigNewUnitForm = class(TForm)
     Panel_Left: TPanel;
     Panel_Left_Top: TPanel;
@@ -78,10 +91,12 @@ var
 
 implementation
 
-Uses
- D2Bridge.Wizard.Util;
+{$IFnDEF FPC}
+  {$R *.dfm}
+{$ELSE}
+  {$R *.lfm}
+{$ENDIF}
 
-{$R *.dfm}
 
 procedure TD2BridgeConfigNewUnitForm.Edit_ClassNameExit(Sender: TObject);
 begin

@@ -55,7 +55,7 @@ Email: talisjonatas@me.com"/>
 
   God bless you
  +--------------------------------------------------------------------------+"/>
-    <Version Major="2" Minor="2"/>
+    <Version Major="2" Minor="31"/>
     <Files>
       <Item>
         <Filename Value="Lazarus\d2bridge.newproject.wizard.fpc.pas"/>
@@ -82,6 +82,26 @@ Email: talisjonatas@me.com"/>
         <Filename Value="Lazarus\d2bridge.newcrud.wizard.fpc.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="D2Bridge.NewCrud.Wizard.FPC"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPIUnit.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPIUnit.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPIClassUnit.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPIClassUnit.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPIAuthUnit.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPIAuthUnit.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPISession.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPISession.Wizard"/>
       </Item>
       <Item>
         <Filename Value="Commom\D2Bridge.NewForm.Wizard.Commom.pas"/>
@@ -125,6 +145,14 @@ Email: talisjonatas@me.com"/>
       <Item>
         <Filename Value="Commom\Forms\D2Bridge.ConfigNewProject.View.pas"/>
         <UnitName Value="D2Bridge.ConfigNewProject.View"/>
+      </Item>
+      <Item>
+        <Filename Value="Commom\Forms\D2Bridge.ConfigNewUnit.View.pas"/>
+        <UnitName Value="D2Bridge.ConfigNewUnit.View"/>
+      </Item>
+      <Item>
+        <Filename Value="Commom\Forms\D2Bridge.ConfigNewUnit.View.lfm"/>
+        <Type Value="LFM"/>
       </Item>
       <Item>
         <Filename Value="Commom\D2Bridge.NewProject.Wizard.Common.pas"/>
