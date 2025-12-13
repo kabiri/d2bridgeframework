@@ -103,7 +103,7 @@ end;
 
 function TD2BridgeNewRestAPISessionWizard.GetIDString: string;
 begin
- Result := 'D2Bridge.Unit.API.4';
+ Result := 'D2Bridge.Unit.API.5';
 end;
 
 function TD2BridgeNewRestAPISessionWizard.GetName: string;

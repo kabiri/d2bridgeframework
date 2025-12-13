@@ -24,6 +24,7 @@ type
    class procedure PostLogin(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
    class procedure PostRefreshToken(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
    class procedure GetCurrentUser(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
+   class procedure Health(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);	 
   protected
    //Register EndPoints
    class procedure RegisterEndPoints; override;
@@ -46,10 +47,10 @@ implementation
 //Register Endpoints
 class procedure T<CLASS_ID>.RegisterEndPoints;
 begin
- AddPost('/api/auth/login',        @PostLogin);
- AddPost('/api/auth/refreshtoken', @PostRefreshToken, true); //True -> Require Auth JWT
-  AddGet('/api/auth/currentuser',  @GetCurrentUser, true); //True -> Require Auth JWT
-  AddGet('/api/health',            @Health);
+ AddPost('/api/auth/login',        PostLogin);
+ AddPost('/api/auth/refreshtoken', PostRefreshToken, true); //True -> Require Auth JWT
+ AddGet('/api/auth/currentuser',   GetCurrentUser, true); //True -> Require Auth JWT
+ AddGet('/api/health',             Health);
 end;
 
 
@@ -97,7 +98,7 @@ end;
 //Health example
 class procedure T<CLASS_ID>.Health(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
 begin
- Response.JSON(200, 'ok');
+ Response.JSON(HTTPStatus.SuccessOK, 'ok');
 end;
 
 

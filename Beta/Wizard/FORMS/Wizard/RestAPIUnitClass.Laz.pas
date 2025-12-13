@@ -44,7 +44,7 @@ implementation
 //Register Endpoints
 class procedure T<CLASS_ID>.RegisterEndPoints;
 begin
- //AddGet('/api/ping', @GetPing, false); //True -> Require Auth JWT
+ //AddGet('/api/ping', GetPing, false); //True -> Require Auth JWT
 end;
 
 

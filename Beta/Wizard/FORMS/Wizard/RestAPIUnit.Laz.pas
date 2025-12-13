@@ -29,7 +29,7 @@ end;
 initialization
 //Register EndPoints
 {
-  AddGet('/api/ping', @GetPing);
+  AddGet('/api/ping', GetPing);
 }
 
 end.

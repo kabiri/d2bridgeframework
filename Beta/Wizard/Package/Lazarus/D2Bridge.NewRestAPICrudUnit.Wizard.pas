@@ -31,7 +31,7 @@
  +--------------------------------------------------------------------------+
 }
 
-unit D2Bridge.NewRestAPISession.Wizard;
+unit D2Bridge.NewRestAPICrudUnit.Wizard;
 
 {$mode objfpc}{$H+}
 
@@ -39,20 +39,26 @@ interface
 
 uses
   Classes, SysUtils, ProjectIntf, Dialogs, LazIDEIntf, DateUtils, Forms,
-  LazFileUtils, ProjPackIntf, System.UITypes,
-  D2Bridge.Wizard.Util;
+  LazFileUtils, System.UITypes,
+  D2Bridge.Wizard.Util,
+  D2Bridge.ConfigNewUnit.View;
 
 type
 
- { TD2BridgeNewRestAPISessionWizard }
+ { TD2BridgeNewRestCrudAPIUnitWizard }
 
- TD2BridgeNewRestAPISessionWizard = class (TProjectFileDescriptor)
+ TD2BridgeNewRestCrudAPIUnitWizard = class (TProjectFileDescriptor)
+ private
+  FNewUnitForm: TD2BridgeConfigNewUnitForm;
+  FClassName: string;
+  FUnitName: string;
+  FTable: string;
  protected
   function Init(var NewFilename: string; NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult; override;
   function Initialized({%H-}NewFile: TLazProjectFile): TModalResult; override;
-  procedure AddCustomCompilerDirective;
  public
   constructor Create; override;
+  destructor Destroy; override;
   function CreateSource(const Filename     : string;
                         const SourceName   : string;
                         const ResourceName : string): string; override;
@@ -64,25 +70,33 @@ procedure Register;
 
 implementation
 
-{ TD2BridgeNewRestAPISessionWizard }
+{ TD2BridgeNewRestCrudAPIUnitWizard }
 
-constructor TD2BridgeNewRestAPISessionWizard.Create;
+constructor TD2BridgeNewRestCrudAPIUnitWizard.Create;
 begin
  inherited Create;
- DefaultFilename:= 'D2Bridge.Rest.Session';
- DefaultSourceName:= 'D2Bridge.Rest.Session';
+ DefaultFilename:= 'UnitCrud1';
+ DefaultSourceName:= 'UnitCrud1';
  DefaultFileExt:= '.pas';
- UseCreateFormStatements:= True;
+ UseCreateFormStatements:= False;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit5'; //CFileDescritor
+ Name := 'D2BridgeWizardAPINewUnit4'; //CFileDescritor
+ FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
 end;
 
-function TD2BridgeNewRestAPISessionWizard.Init(var NewFilename: string;
+destructor TD2BridgeNewRestCrudAPIUnitWizard.Destroy;
+begin
+ FNewUnitForm.Free;
+
+ inherited Destroy;
+end;
+
+function TD2BridgeNewRestCrudAPIUnitWizard.Init(var NewFilename: string;
   NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult;
 var
  vPathWizard: string;
 begin
- vPathWizard:= ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath)) + PathDelim + 'Wizard';
+ vPathWizard:= ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath))+ PathDelim + 'Wizard';
 
  if (vPathWizard = '') or (not DirectoryExists(vPathWizard)) then
  begin
@@ -91,26 +105,37 @@ begin
   exit;
  end;
 
- Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
+ FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Crud';
+ FNewUnitForm.Edit_ClassName.Text:= 'MyTable';
+ FNewUnitForm.Label3.Caption:= 'Table Name:';
+ //FNewUnitForm.Edit_TableName.Visible:= true;
+ //FNewUnitForm.Edit_TableName.Text:= 'MyTable';
+ FNewUnitForm.ShowModal;
 
- //ResourceClass:= TDataModule;
+ if not FNewUnitForm.EnableCreateNewUnit then
+ begin
+  result:= mrAbort;
+  exit;
+ end;
+
+ FTable:= Trim(FNewUnitForm.Edit_ClassName.Text);
+
+ //Fix ClassName and UnitName
+ FClassName:= 'ApiCrud' + FNewUnitForm.Edit_ClassName.Text;
+ if FClassName.StartsWith('T') then
+  FClassName:= Copy(FClassName, 2, 99999999);
+ FUnitName:= FClassName;
+
+ Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
+ //ResourceClass:= TForm;
 end;
 
-function TD2BridgeNewRestAPISessionWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
+function TD2BridgeNewRestCrudAPIUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
 begin
  Result:=inherited Initialized(NewFile);
 end;
 
-procedure TD2BridgeNewRestAPISessionWizard.AddCustomCompilerDirective;
-begin
- if LazProject1 = nil then Exit;
-
- if Pos('-d' + 'D2BridgeCustomRestSession', LazProject1.LazCompilerOptions.CustomOptions) = 0 then
-   LazProject1.LazCompilerOptions.CustomOptions :=
-     Trim(LazProject1.LazCompilerOptions.CustomOptions + ' -d' + 'D2BridgeCustomRestSession');
-end;
-
-function TD2BridgeNewRestAPISessionWizard.CreateSource(const Filename: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.CreateSource(const Filename: string;
  const SourceName: string; const ResourceName: string): string;
 var
  vPathNewFormPAS: string;
@@ -124,7 +149,7 @@ begin
   vPathWizard + PathDelim +
   'FORMS' + PathDelim +
   'Wizard'  + PathDelim +
-  'D2Bridge.Rest.Session.Laz.pas';
+  'RestAPICrudUnit.pas';
 
  vNewFormPASFile:= TStringStream.Create('', TEncoding.UTF8);
  vNewFormPASFile.LoadFromFile(GetRealFilePath(vPathNewFormPas));
@@ -135,33 +160,35 @@ begin
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<ServerController>', GetUsesServerControllerName,[rfIgnoreCase]);
 
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<UNITNAME>', SourceName, [rfIgnoreCase, rfReplaceAll]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', ResourceName, [rfIgnoreCase, rfReplaceAll]);
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', FClassName, [rfIgnoreCase, rfReplaceAll]);
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASSINHERITED>', 'TD2BridgeForm', [rfIgnoreCase, rfReplaceAll]);
+
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<TABLENAME>', FTable, [rfIgnoreCase, rfReplaceAll]);
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<TABLENAMELOWER>', LowerCase(FTable), [rfIgnoreCase, rfReplaceAll]);
 
  result:= sNewFormPASContent;
 
    //Result := StringReplace(Result, '<ANCESTOR_ID>', FixAncestorClass,
    //  [rfReplaceAll, rfIgnoreCase]);
 
+ //ShowMessage(result);
+
  vNewFormPASFile.free;
-
-
- AddCustomCompilerDirective;
 end;
 
-function TD2BridgeNewRestAPISessionWizard.GetLocalizedName: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.GetLocalizedName: string;
 begin
- Result := 'D2Bridge REST Session';
+ Result := 'D2Bridge REST API CRUD Unit';
 end;
 
-function TD2BridgeNewRestAPISessionWizard.GetLocalizedDescription: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.GetLocalizedDescription: string;
 begin
- Result:= 'Create Session for REST API Server. Just one Session Unit is necessary';
+ Result:= 'Create a new D2Bridge Rest API CRUD Unit from List, Insert, Update and Delete';
 end;
 
 procedure Register;
 begin
- RegisterProjectFileDescriptor(TD2BridgeNewRestAPISessionWizard.Create);
+ RegisterProjectFileDescriptor(TD2BridgeNewRestCrudAPIUnitWizard.Create);
 end;
 
 end.

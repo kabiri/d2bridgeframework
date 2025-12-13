@@ -43,6 +43,9 @@ uses
 
 
 type
+
+ { TD2BridgeRestEntity }
+
  TD2BridgeRestEntity = class(TInterfacedPersistent, ID2BridgeRestEntity)
   private
 
@@ -54,16 +57,16 @@ type
    class procedure RegisterEndPoints; virtual; abstract;
 
    //WebMetods
-   class procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
-   class procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
-   class procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
-   class procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
-   class procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
-   class procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
-   class procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
-   class procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
-   class procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
-   class procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
+   class procedure AddGet(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}); overload;
+   class procedure AddGet(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean); overload;
+   class procedure AddPost(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}); overload;
+   class procedure AddPost(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean); overload;
+   class procedure AddPut(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}); overload;
+   class procedure AddPut(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean); overload;
+   class procedure AddPatch(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}); overload;
+   class procedure AddPatch(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean); overload;
+   class procedure AddDelete(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}); overload;
+   class procedure AddDelete(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean); overload;
   public
    //Events
    class procedure OnNewRestSession(const RestSession: TD2BridgeRestSession); virtual;
@@ -81,13 +84,13 @@ Uses
 
 { TD2BridgeRestEntity }
 
-class procedure TD2BridgeRestEntity.AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack);
+class procedure TD2BridgeRestEntity.AddGet(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF});
 begin
  AddGet(Path, ACallBack, false);
 end;
 
 class procedure TD2BridgeRestEntity.AddDelete(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean);
 begin
 {$IFDEF D2BRIDGE}
  if not Assigned(D2BridgeRest) then
@@ -98,12 +101,12 @@ begin
 end;
 
 class procedure TD2BridgeRestEntity.AddDelete(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF});
 begin
  AddDelete(Path, ACallBack, false);
 end;
 
-class procedure TD2BridgeRestEntity.AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
+class procedure TD2BridgeRestEntity.AddGet(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean);
 begin
 {$IFDEF D2BRIDGE}
  if not Assigned(D2BridgeRest) then
@@ -114,13 +117,13 @@ begin
 end;
 
 class procedure TD2BridgeRestEntity.AddPatch(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF});
 begin
  AddPatch(Path, ACallBack, false);
 end;
 
 class procedure TD2BridgeRestEntity.AddPatch(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean);
 begin
 {$IFDEF D2BRIDGE}
  if not Assigned(D2BridgeRest) then
@@ -131,7 +134,7 @@ begin
 end;
 
 class procedure TD2BridgeRestEntity.AddPost(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean);
 begin
 {$IFDEF D2BRIDGE}
  if not Assigned(D2BridgeRest) then
@@ -141,19 +144,19 @@ begin
 {$ENDIF}
 end;
 
-class procedure TD2BridgeRestEntity.AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack);
+class procedure TD2BridgeRestEntity.AddPost(const Path: string; ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF});
 begin
  AddPost(Path, ACallBack, false);
 end;
 
 class procedure TD2BridgeRestEntity.AddPut(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF});
 begin
  AddPut(Path, ACallBack, false);
 end;
 
 class procedure TD2BridgeRestEntity.AddPut(const Path: string;
-  ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
+  ACallBack: {$IFDEF FPC}TD2BridgeRestRouteMethodCallBack{$ELSE}TD2BridgeRestRouteCallBack{$ENDIF}; RequireAuth: boolean);
 begin
 {$IFDEF D2BRIDGE}
  if not Assigned(D2BridgeRest) then

@@ -99,6 +99,11 @@ Email: talisjonatas@me.com"/>
         <UnitName Value="D2Bridge.NewRestAPIAuthUnit.Wizard"/>
       </Item>
       <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPICrudUnit.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPICrudUnit.Wizard"/>
+      </Item>
+      <Item>
         <Filename Value="Lazarus\D2Bridge.NewRestAPISession.Wizard.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="D2Bridge.NewRestAPISession.Wizard"/>

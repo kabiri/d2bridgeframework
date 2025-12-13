@@ -31,7 +31,7 @@
  +--------------------------------------------------------------------------+
 }
 
-unit D2Bridge.NewRestAPIClassUnit.Wizard;
+unit D2Bridge.NewRestAPICrudClassUnit.Wizard;
 
 interface
 
@@ -40,7 +40,7 @@ uses
   D2Bridge.NewForm, D2Bridge.Wizard.Util, System.SysUtils;
 
 type
- TD2BridgeNewRestAPIClassUnitWizard = class(TNotifierObject, IOTAWizard, IOTAProjectWizard, IOTAFormWizard, IOTARepositoryWizard)
+ TD2BridgeNewRestAPICrudClassUnitWizard = class(TNotifierObject, IOTAWizard, IOTAProjectWizard, IOTAFormWizard, IOTARepositoryWizard)
   protected
     function GetIDString: string;
     function GetName: string;
@@ -60,6 +60,7 @@ type
  end;
 
  TD2BridgeFormFileCreator = class(TModuleCreatorFile)
+ private
  public
    function GetSource: string; override;
  end;
@@ -70,13 +71,15 @@ type
    FModuleIdent: string;
    FFormIdent: string;
    FAncestorIdent: string;
+   FParameter: string;
  public
    function GetCreatorType: string; override;
    function GetImplFileName: string; override;
    function GetAncestorName: string; override;
+   function GetParameter: string;
    function GetImplFile: TModuleCreatorFileClass; override;
    function NewImplSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile; override;
-   constructor Create(ModuleIdent, FormIdent, AncestorIdent: string);
+   constructor Create(ModuleIdent, FormIdent, AncestorIdent, AParameter: string);
  end;
 
 
@@ -86,36 +89,41 @@ uses
   Winapi.Windows, System.DateUtils, Vcl.Dialogs, D2Bridge.ConfigNewUnit.View,
   Vcl.Forms, System.Classes;
 
-{ TD2BridgeNewRestAPIClassUnitWizard }
+{ TD2BridgeNewRestAPICrudClassUnitWizard }
 
 var
   DelphiCategory: IOTAGalleryCategory;
 
 
-procedure TD2BridgeNewRestAPIClassUnitWizard.Execute;
+procedure TD2BridgeNewRestAPICrudClassUnitWizard.Execute;
 var
   WizardNewUnitForm: TD2BridgeConfigNewUnitForm;
   vUnitName, vClassName: string;
+  vModule: IOTAModule;
 begin
  WizardNewUnitForm := TD2BridgeConfigNewUnitForm.Create(Application);
  try
-  WizardNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API';
-  WizardNewUnitForm.Edit_ClassName.Text:= 'TAPIFile';
+  WizardNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Crud';
+  WizardNewUnitForm.Label3.Caption:= 'Table Name:';
+  WizardNewUnitForm.Edit_ClassName.Text:= 'MyTable';
+  //WizardNewUnitForm.Edit_TableName.Visible:= true;
+  //WizardNewUnitForm.Edit_TableName.Text:= 'MyTable';
   WizardNewUnitForm.ShowModal;
 
   if WizardNewUnitForm.EnableCreateNewUnit then
   begin
    inherited;
-    vClassName:= WizardNewUnitForm.Edit_ClassName.Text;
+    vClassName:= 'ApiCrud' + WizardNewUnitForm.Edit_ClassName.Text;
     if vClassName.StartsWith('T') then
      vClassName:= Copy(vClassName, 2);
     vUnitName:= vClassName;
 
-    (BorlandIDEServices as IOTAModuleServices).CreateModule(TD2BridgeNewFormModule.Create
+    vModule:= (BorlandIDEServices as IOTAModuleServices).CreateModule(TD2BridgeNewFormModule.Create
      (
       vUnitName,
       vClassName,
-      ''
+      '',
+      Trim(WizardNewUnitForm.Edit_ClassName.Text)
      ));
   end;
  finally
@@ -125,59 +133,60 @@ begin
  end;
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetAuthor: string;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetAuthor: string;
 begin
   Result := 'D2Bridge Framework by Talis Jonatas Gomes';
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetComment: string;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetComment: string;
 begin
- Result := 'Create a new D2Bridge Rest API Class Unit';
+ Result := 'Create a new D2Bridge Rest API Crud Unit';
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetGlyph: {$IF CompilerVersion < 37.0}Cardinal{$ELSE}THandle{$ENDIF};
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetGlyph: {$IF CompilerVersion < 37.0}Cardinal{$ELSE}THandle{$ENDIF};
 begin
   Result := LoadIcon(hInstance, 'RESTAPI');
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetIDString: string;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetIDString: string;
 begin
- Result := 'D2Bridge.Unit.API.2';
+ Result := 'D2Bridge.Unit.API.4';
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetName: string;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetName: string;
 begin
-  Result := 'D2Bridge REST API Class Unit';
+  Result := 'D2Bridge REST API Crud Unit';
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetPage: string;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetPage: string;
 begin
  Result := 'D2Bridge Framework';
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.GetState: TWizardState;
+function TD2BridgeNewRestAPICrudClassUnitWizard.GetState: TWizardState;
 begin
   Result := [wsEnabled];
 end;
 
-function TD2BridgeNewRestAPIClassUnitWizard.IsVisible(Project: IOTAProject): Boolean;
+function TD2BridgeNewRestAPICrudClassUnitWizard.IsVisible(Project: IOTAProject): Boolean;
 begin
  result:= false;
 end;
 
-class function TD2BridgeNewRestAPIClassUnitWizard.New: IOTAWizard;
+class function TD2BridgeNewRestAPICrudClassUnitWizard.New: IOTAWizard;
 begin
   Result := Self.Create;
 end;
 
 { TD2BridgeNewFormModule }
 
-constructor TD2BridgeNewFormModule.Create(ModuleIdent, FormIdent, AncestorIdent: string);
+constructor TD2BridgeNewFormModule.Create(ModuleIdent, FormIdent, AncestorIdent, AParameter: string);
 begin
  FUnitName:= ModuleIdent+'.pas';
  FModuleIdent:= ModuleIdent;
  FFormIdent:= FormIdent;
  FAncestorIdent:= AncestorIdent;
+ FParameter:= AParameter;
 
  inherited Create;
 end;
@@ -202,11 +211,19 @@ begin
  result:= ExtractFilePath(GetCurrentProject.FileName)+FUnitName;
 end;
 
+function TD2BridgeNewFormModule.GetParameter: string;
+begin
+ result:= FParameter;
+end;
+
 function TD2BridgeNewFormModule.NewImplSource(const ModuleIdent, FormIdent, AncestorIdent: string): IOTAFile;
 begin
  Result := nil;
  if GetImplFile <> nil then
-   Result := GetImplFile.Create(FModuleIdent, FFormIdent, FAncestorIdent, '');
+ begin
+   Result := GetImplFile.Create(FModuleIdent, FFormIdent, FAncestorIdent, FParameter);
+   TModuleCreatorFile(Result).D2BridgeWizardFormCreator:= self;
+ end;
 end;
 
 { TD2BridgeFormFileCreator }
@@ -217,13 +234,17 @@ var
  sFile: TStringStream;
 begin
   sFile:= TStringStream.Create('', TEncoding.UTF8);
-  sFile.LoadFromFile(ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath))+ '\Wizard\FORMS\Wizard\RestAPIUnitClass.pas');
+  sFile.LoadFromFile(ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath))+ '\Wizard\FORMS\Wizard\RestAPICrudUnit.pas');
   vFileContent:= sFile.DataString;
   sFile.Free;
 
   Result:= vFileContent;
   Result := StringReplace(Result,'<COPYRIGHTYEAR>',IntToStr(YearOf(Now)) + ' / ' + IntToStr(YearOf(Now) + 1),[rfIgnoreCase]);
   Result := StringReplace(Result,'<ServerController>', GetUsesServerControllerName,[rfIgnoreCase]);
+
+  Result := StringReplace(Result, '<TABLENAME>', GetParameter, [rfIgnoreCase, rfReplaceAll]);
+  Result := StringReplace(Result, '<TABLENAMELOWER>', LowerCase(GetParameter), [rfIgnoreCase, rfReplaceAll]);
+
   Result := inherited GetSource;
 end;
 

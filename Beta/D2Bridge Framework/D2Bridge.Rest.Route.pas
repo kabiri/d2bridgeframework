@@ -53,9 +53,14 @@ type
 
  TD2BridgeRestRoutes = class;
 
+ { TD2BridgeRestRoute }
+
  TD2BridgeRestRoute = class(TInterfacedPersistent, ID2BridgeRestRoute)
   private
    FCallBack: TD2BridgeRestRouteCallBack;
+{$IFDEF FPC}
+   FMethodCallBack: TD2BridgeRestRouteMethodCallBack;
+{$ENDIF}
    FPath: string;
    FWebMethod: TPrismWebMethod;
    FNormalizedPath: string;
@@ -74,6 +79,10 @@ type
    procedure ParseParams(AurlPath: string; AParams: TStrings);
    procedure SetRequireJWT(const Value: Boolean);
    procedure SetRouteEntityClass(const Value: TD2BridgeRestEntityClass);
+{$IFDEF FPC}
+   function GetMethodCallBack: TD2BridgeRestRouteMethodCallBack;
+   procedure SetMethodCallBack(const Value: TD2BridgeRestRouteMethodCallBack);
+{$ENDIF}
   protected
   public
    constructor Create;
@@ -81,6 +90,10 @@ type
    procedure DoCallBack(const Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
 
    function NormalizedPath: string;
+
+{$IFDEF FPC}
+   property MethodCallBack: TD2BridgeRestRouteMethodCallBack read GetMethodCallBack write SetMethodCallBack;
+{$ENDIF}
 
    property CallBack: TD2BridgeRestRouteCallBack read GetCallBack write SetCallBack;
    property Path: string read GetPath write SetPath;
@@ -90,6 +103,8 @@ type
  end;
 
 
+
+ { TD2BridgeRestRoutes }
 
  TD2BridgeRestRoutes = class(TInterfacedPersistent, ID2BridgeRestRoutes)
   private
@@ -110,6 +125,9 @@ type
    procedure Add(AWebMethod: TPrismWebMethod; APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack); overload;
    procedure Add(AWebMethod: TPrismWebMethod; APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure Add(AWebMethod: TPrismWebMethod; APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack; RequireAuth: boolean; RestEntityClass: TD2BridgeRestEntityClass); overload;
+{$IFDEF FPC}
+   procedure Add(AWebMethod: TPrismWebMethod; APath: string; ARouteCallBack:TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; RestEntityClass: TD2BridgeRestEntityClass); overload;
+{$ENDIF}
    procedure AddGet(APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack); overload;
    procedure AddPost(APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack); overload;
    procedure AddPut(APath: string; ARouteCallBack:TD2BridgeRestRouteCallBack); overload;
@@ -245,10 +263,17 @@ begin
    try
     if Assigned(CallBack) then
      CallBack(vRestSession, Request, Response);
+{$IFDEF FPC}
+    if Assigned(MethodCallBack) then
+     MethodCallBack(vRestSession, Request, Response);
+{$ENDIF}
    except on E: Exception do
 {$IFDEF MSWINDOWS}
-   if IsDebuggerPresent and (not PrismBaseClass.IsD2DockerContext) then
+   try
+    if IsDebuggerPresent and (not PrismBaseClass.IsD2DockerContext) then
      raise Exception.Create(E.Message);
+   except;
+   end;
 {$ENDIF}
    end;
   end;
@@ -373,6 +398,20 @@ begin
  FRouteEntityClass := Value;
 end;
 
+{$IFDEF FPC}
+function TD2BridgeRestRoute.GetMethodCallBack: TD2BridgeRestRouteMethodCallBack;
+begin
+ result:= FMethodCallBack;
+end;
+{$ENDIF}
+
+{$IFDEF FPC}
+procedure TD2BridgeRestRoute.SetMethodCallBack(const Value: TD2BridgeRestRouteMethodCallBack);
+begin
+ FMethodCallBack:= Value;
+end;
+{$ENDIF}
+
 procedure TD2BridgeRestRoute.SetWebMethod(const Value: TPrismWebMethod);
 begin
  FWebMethod := Value;
@@ -425,6 +464,36 @@ begin
  FItems.Add(vD2BridgeRestRoute);
 
 end;
+
+{$IFDEF FPC}
+procedure TD2BridgeRestRoutes.Add(AWebMethod: TPrismWebMethod; APath: string; ARouteCallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; RestEntityClass: TD2BridgeRestEntityClass);
+var
+ vD2BridgeRestRoute: TD2BridgeRestRoute;
+begin
+ if APath = '' then
+  raise Exception.Create('EndPoint is blank');
+
+ if not APath.StartsWith('/') then
+  APath:= '/' + APath;
+
+ if APath.EndsWith('/') then
+  APath:= Copy(APath, 1, Length(APath)-1);
+
+ if Exist(AWebMethod, APath) then
+  raise Exception.Create('An EndPoint with this path already exists'+#13+'Invalid EndPoint: '+APath);
+
+ vD2BridgeRestRoute:= TD2BridgeRestRoute.Create;
+ vD2BridgeRestRoute.WebMethod:= AWebMethod;
+ vD2BridgeRestRoute.Path:= APath;
+ vD2BridgeRestRoute.MethodCallBack:= ARouteCallBack;
+ vD2BridgeRestRoute.RequireJWT:= RequireAuth;
+ if Assigned(RestEntityClass) then
+  vD2BridgeRestRoute.RouteEntityClass:= RestEntityClass;
+
+ FItems.Add(vD2BridgeRestRoute);
+
+end;
+{$ENDIF}
 
 procedure TD2BridgeRestRoutes.AddDelete(APath: string; ARouteCallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean);
 begin
