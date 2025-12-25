@@ -1769,7 +1769,6 @@ begin
   end;
  end;
 end;
-{$ENDIF}  
 
 
 //Event
