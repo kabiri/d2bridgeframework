@@ -87,7 +87,7 @@ function GetCurrentProjectGroup: IOTAProjectGroup;
 {$ENDIF}
 
 const
-  D2BridgeWizardVersion = 2.31;
+  D2BridgeWizardVersion = 2.51;
 
 implementation
 

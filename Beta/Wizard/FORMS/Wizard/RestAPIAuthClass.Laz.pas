@@ -12,7 +12,8 @@ uses
   Classes, SysUtils, fpjson,
   Prism.Types,
   D2Bridge.JSON, D2Bridge.Rest.Entity,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 
 type
@@ -24,7 +25,7 @@ type
    class procedure PostLogin(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
    class procedure PostRefreshToken(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
    class procedure GetCurrentUser(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
-   class procedure Health(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);	 
+   class procedure Health(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse);
   protected
    //Register EndPoints
    class procedure RegisterEndPoints; override;
@@ -81,9 +82,21 @@ class procedure T<CLASS_ID>.PostRefreshToken(const RestSession: TD2BridgeRestSes
 begin
  if (Request.JWTTokenType = JWTTokenRefresh) and  (Request.JWTvalid) then
  begin
+  //Check User ?
+  //if not User then
+  //begin
+  // Response.JSON(HTTPStatus.ErrorUnauthorized, 'User invalid');
+  // exit;
+  //end;
+
   Response.JSON.AddPair('accessToken', RestSecurity.JWTAccess.Token(Request.JWTsub, Request.JWTidentity));
   Response.JSON.AddPair('expiresIn', RestSecurity.JWTAccess.ExpirationSeconds);
- end;
+ end else
+ begin
+  Response.JSON(HTTPStatus.ErrorForbidden, 'Refresh Token Invalid');
+  exit;
+ end; 
+ 
 end;
 
 

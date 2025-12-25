@@ -85,7 +85,7 @@ begin
 
  FFieldNameLowerCase:= true;
 
- FFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}FormatSettings{$ENDIF};
+ FFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
  FFormatSettings.ShortDateFormat := 'yyyy-mm-dd';
  FFormatSettings.DateSeparator:= '-';
  FFormatSettings.DecimalSeparator:= '.';

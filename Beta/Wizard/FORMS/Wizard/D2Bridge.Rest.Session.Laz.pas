@@ -106,8 +106,8 @@ end;
 //begin
 // if FDM = nil then
 //  TThread.Synchronize(nil, Exec_CreateDM); 
-//	
-// result:= FDM;	
+//
+// result:= FDM;
 //end;
 
 

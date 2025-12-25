@@ -638,12 +638,18 @@ end;
 function TD2BridgeRestRoutes.MatchPath(const RoutePath, UrlPath: string): Boolean;
 var
   RouteParts, UrlParts: TArray<string>;
+  vUrlPath: string;
   I: Integer;
 begin
   Result := False;
+  vUrlPath:= UrlPath;
+
+  if vUrlPath.EndsWith('/') then
+   vUrlPath:= Copy(vUrlPath, 1, Length(vUrlPath)-1);
+
 
   RouteParts := RoutePath.Split(['/']);
-  UrlParts := UrlPath.Split(['/']);
+  UrlParts := vUrlPath.Split(['/']);
 
   if Length(RouteParts) <> Length(UrlParts) then
     Exit;

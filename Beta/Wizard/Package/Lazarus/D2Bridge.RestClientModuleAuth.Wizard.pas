@@ -31,7 +31,7 @@
  +--------------------------------------------------------------------------+
 }
 
-unit D2Bridge.NewRestAPIAuthUnit.Wizard;
+unit D2Bridge.RestClientModuleAuth.Wizard;
 
 {$mode objfpc}{$H+}
 
@@ -40,24 +40,18 @@ interface
 uses
   Classes, SysUtils, ProjectIntf, Dialogs, LazIDEIntf, DateUtils, Forms,
   LazFileUtils, System.UITypes,
-  D2Bridge.Wizard.Util,
-  D2Bridge.ConfigNewUnit.View;
+  D2Bridge.Wizard.Util;
 
 type
 
- { TD2BridgeNewRestAPIAuthUnitWizard }
+ { TD2BridgeRestClientModuleAuthWizard }
 
- TD2BridgeNewRestAPIAuthUnitWizard = class (TProjectFileDescriptor)
- private
-  FNewUnitForm: TD2BridgeConfigNewUnitForm;
-  FClassName: string;
-  FUnitName: string;
+ TD2BridgeRestClientModuleAuthWizard = class (TProjectFileDescriptor)
  protected
   function Init(var NewFilename: string; NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult; override;
   function Initialized({%H-}NewFile: TLazProjectFile): TModalResult; override;
  public
   constructor Create; override;
-  destructor Destroy; override;
   function CreateSource(const Filename     : string;
                         const SourceName   : string;
                         const ResourceName : string): string; override;
@@ -69,28 +63,20 @@ procedure Register;
 
 implementation
 
-{ TD2BridgeNewRestAPIAuthUnitWizard }
+{ TD2BridgeRestClientModuleAuthWizard }
 
-constructor TD2BridgeNewRestAPIAuthUnitWizard.Create;
+constructor TD2BridgeRestClientModuleAuthWizard.Create;
 begin
  inherited Create;
- DefaultFilename:= 'Unit1';
- DefaultSourceName:= 'Unit1';
+ DefaultFilename:= 'Auth.API.Client';
+ DefaultSourceName:= 'Auth.API.Client';
  DefaultFileExt:= '.pas';
  UseCreateFormStatements:= false;
- IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit3'; //CFileDescritor
- FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
+ IsPascalUnit:= true;
+ Name := 'D2BridgeWizardAPIClient3'; //CFileDescritor
 end;
 
-destructor TD2BridgeNewRestAPIAuthUnitWizard.Destroy;
-begin
- FNewUnitForm.Free;
-
- inherited Destroy;
-end;
-
-function TD2BridgeNewRestAPIAuthUnitWizard.Init(var NewFilename: string;
+function TD2BridgeRestClientModuleAuthWizard.Init(var NewFilename: string;
   NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult;
 var
  vPathWizard: string;
@@ -104,34 +90,16 @@ begin
   exit;
  end;
 
- FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Authentication';
- FNewUnitForm.Edit_ClassName.Text:= 'TAPIAuth';
- FNewUnitForm.EnableCreateNewUnit:= false;
- FNewUnitForm.ShowModal;
-
- if not FNewUnitForm.EnableCreateNewUnit then
- begin
-  result:= mrAbort;
-  exit;
- end;
-
- //Fix ClassName and UnitName
- FClassName:= FNewUnitForm.Edit_ClassName.Text;
- if FClassName.StartsWith('T') then
-  FClassName:= Copy(FClassName, 2, 99999999);
- FUnitName:= FClassName;
-
-
  Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
  //ResourceClass:= TForm;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
+function TD2BridgeRestClientModuleAuthWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
 begin
  Result:=inherited Initialized(NewFile);
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.CreateSource(const Filename: string;
+function TD2BridgeRestClientModuleAuthWizard.CreateSource(const Filename: string;
  const SourceName: string; const ResourceName: string): string;
 var
  vPathNewFormPAS: string;
@@ -145,19 +113,19 @@ begin
   vPathWizard + PathDelim +
   'FORMS' + PathDelim +
   'Wizard'  + PathDelim +
-  'RestAPIAuth.Laz.pas';
+  'Auth.API.Client.pas';
 
  vNewFormPASFile:= TStringStream.Create('', TEncoding.UTF8);
  vNewFormPASFile.LoadFromFile(GetRealFilePath(vPathNewFormPas));
  sNewFormPASContent:= vNewFormPASFile.DataString;
 
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<DEFINITIONUNIT>', 'D2Bridge.Forms', [rfIgnoreCase]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<COPYRIGHTYEAR>', IntToStr(YearOf(Now)) + ' / ' + IntToStr(YearOf(Now) + 1),[rfIgnoreCase]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<ServerController>', GetUsesServerControllerName,[rfIgnoreCase]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<DEFINITIONUNIT>', 'D2Bridge.Forms', [rfIgnoreCase]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<COPYRIGHTYEAR>', IntToStr(YearOf(Now)) + ' / ' + IntToStr(YearOf(Now) + 1),[rfIgnoreCase]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<ServerController>', GetUsesServerControllerName,[rfIgnoreCase]);
 
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<UNITNAME>', SourceName, [rfIgnoreCase, rfReplaceAll]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', FClassName, [rfIgnoreCase, rfReplaceAll]);
- sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASSINHERITED>', 'TD2BridgeForm', [rfIgnoreCase, rfReplaceAll]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<UNITNAME>', SourceName, [rfIgnoreCase, rfReplaceAll]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', ResourceName, [rfIgnoreCase, rfReplaceAll]);
+ //sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASSINHERITED>', 'TD2BridgeForm', [rfIgnoreCase, rfReplaceAll]);
 
  result:= sNewFormPASContent;
 
@@ -167,19 +135,19 @@ begin
  vNewFormPASFile.free;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedName: string;
+function TD2BridgeRestClientModuleAuthWizard.GetLocalizedName: string;
 begin
- Result := 'D2Bridge REST API Autentication';
+ Result := 'D2Bridge REST API Auth Module Client';
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedDescription: string;
+function TD2BridgeRestClientModuleAuthWizard.GetLocalizedDescription: string;
 begin
- Result:= 'Create a D2Bridge Rest API Authentication with JWT native';
+ Result:= 'Authentication Module Client to use with D2Bridge Rest API';
 end;
 
 procedure Register;
 begin
- RegisterProjectFileDescriptor(TD2BridgeNewRestAPIAuthUnitWizard.Create);
+ RegisterProjectFileDescriptor(TD2BridgeRestClientModuleAuthWizard.Create);
 end;
 
 end.

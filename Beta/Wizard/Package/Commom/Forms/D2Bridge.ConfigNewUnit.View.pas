@@ -78,6 +78,7 @@ type
     Label4: TLabel;
     Edit_TableName: TEdit;
     Panel_Container: TPanel;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure Label_CloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -162,6 +163,14 @@ begin
   Label4.Visible:= false;
  end else
   Label4.Visible:= true;
+end;
+
+procedure TD2BridgeConfigNewUnitForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+ if not Edit_TableName.Visible then
+ begin
+  self.Height:= self.Height + 40;
+ end;
 end;
 
 end.

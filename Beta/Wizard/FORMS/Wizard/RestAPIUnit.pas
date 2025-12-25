@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, JSON,
   Prism.Types,
   D2Bridge.JSON,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 
 implementation

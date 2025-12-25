@@ -30,7 +30,7 @@
 
 {$I D2Bridge.inc}
 
-unit D2Bridge.Rest.Client;
+unit D2Bridge.Rest.Client.Internal;
 
 interface
 

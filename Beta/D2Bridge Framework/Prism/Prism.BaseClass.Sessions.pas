@@ -73,6 +73,7 @@ type
    function Exist(AUUID: string): Boolean; overload;
    function Exist(AUUID, AToken: string): Boolean; overload;
    function FromPushID(const APushID: string): IPrismSession;
+   function FromAuthID(const AAuthID: string): IPrismSession;
    function Items: TList<IPrismSession>;
 
    procedure AddThreadhID(AID: integer; APrismSession: IPrismSession);
@@ -363,6 +364,44 @@ begin
   Exec_ProcessMessage;
   {$ENDIF}
 {$ENDIF}
+end;
+
+function TPrismSessions.FromAuthID(const AAuthID: string): IPrismSession;
+var
+ I, J: Integer;
+ vPrismSession: TPrismSession;
+begin
+ FLock.BeginRead;
+
+ try
+  System.Initialize(Result);
+
+  try
+    for I := 0 to Pred(FDictSessions.Count) do
+    begin
+     for vPrismSession in FDictSessions.Values do
+     begin
+      try
+       if Assigned(vPrismSession) then
+       begin
+        if vPrismSession.AuthID = AAuthID then
+        begin
+         Result:= vPrismSession;
+         Break;
+        end;
+       end;
+      except
+      end;
+     end;
+
+     if Assigned(Result) then
+     Break;
+    end;
+  except
+  end;
+ finally
+  FLock.EndRead;
+ end;
 end;
 
 function TPrismSessions.FromPushID(const APushID: string): IPrismSession;

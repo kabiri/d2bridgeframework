@@ -15,7 +15,7 @@ type
   protected
     procedure ExportD2Bridge; override;
     procedure InitControlsD2Bridge(const PrismControl: TPrismControl); override;
-    procedure RenderD2Bridge(const PrismControl: TPrismControl; var HTMLControl: string); override;		
+    procedure RenderD2Bridge(const PrismControl: TPrismControl; var HTMLControl: string); override;
   public
     { Public declarations }
   end;

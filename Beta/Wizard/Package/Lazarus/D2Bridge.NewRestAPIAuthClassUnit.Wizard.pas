@@ -31,7 +31,7 @@
  +--------------------------------------------------------------------------+
 }
 
-unit D2Bridge.NewRestAPIAuthUnit.Wizard;
+unit D2Bridge.NewRestAPIAuthClassUnit.Wizard;
 
 {$mode objfpc}{$H+}
 
@@ -45,9 +45,9 @@ uses
 
 type
 
- { TD2BridgeNewRestAPIAuthUnitWizard }
+ { TD2BridgeNewRestAPIAuthClassUnitWizard }
 
- TD2BridgeNewRestAPIAuthUnitWizard = class (TProjectFileDescriptor)
+ TD2BridgeNewRestAPIAuthClassUnitWizard = class (TProjectFileDescriptor)
  private
   FNewUnitForm: TD2BridgeConfigNewUnitForm;
   FClassName: string;
@@ -69,9 +69,9 @@ procedure Register;
 
 implementation
 
-{ TD2BridgeNewRestAPIAuthUnitWizard }
+{ TD2BridgeNewRestAPIAuthClassUnitWizard }
 
-constructor TD2BridgeNewRestAPIAuthUnitWizard.Create;
+constructor TD2BridgeNewRestAPIAuthClassUnitWizard.Create;
 begin
  inherited Create;
  DefaultFilename:= 'Unit1';
@@ -79,18 +79,18 @@ begin
  DefaultFileExt:= '.pas';
  UseCreateFormStatements:= false;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit3'; //CFileDescritor
+ Name := 'D2BridgeWizardAPINewUnit4'; //CFileDescritor
  FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
 end;
 
-destructor TD2BridgeNewRestAPIAuthUnitWizard.Destroy;
+destructor TD2BridgeNewRestAPIAuthClassUnitWizard.Destroy;
 begin
  FNewUnitForm.Free;
 
  inherited Destroy;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.Init(var NewFilename: string;
+function TD2BridgeNewRestAPIAuthClassUnitWizard.Init(var NewFilename: string;
   NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult;
 var
  vPathWizard: string;
@@ -126,12 +126,12 @@ begin
  //ResourceClass:= TForm;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
+function TD2BridgeNewRestAPIAuthClassUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
 begin
  Result:=inherited Initialized(NewFile);
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.CreateSource(const Filename: string;
+function TD2BridgeNewRestAPIAuthClassUnitWizard.CreateSource(const Filename: string;
  const SourceName: string; const ResourceName: string): string;
 var
  vPathNewFormPAS: string;
@@ -145,7 +145,7 @@ begin
   vPathWizard + PathDelim +
   'FORMS' + PathDelim +
   'Wizard'  + PathDelim +
-  'RestAPIAuth.Laz.pas';
+  'RestAPIAuthClass.Laz.pas';
 
  vNewFormPASFile:= TStringStream.Create('', TEncoding.UTF8);
  vNewFormPASFile.LoadFromFile(GetRealFilePath(vPathNewFormPas));
@@ -167,19 +167,19 @@ begin
  vNewFormPASFile.free;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedName: string;
+function TD2BridgeNewRestAPIAuthClassUnitWizard.GetLocalizedName: string;
 begin
- Result := 'D2Bridge REST API Autentication';
+ Result := 'D2Bridge REST API Class Autentication';
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedDescription: string;
+function TD2BridgeNewRestAPIAuthClassUnitWizard.GetLocalizedDescription: string;
 begin
- Result:= 'Create a D2Bridge Rest API Authentication with JWT native';
+ Result:= 'Create a D2Bridge Rest API Class Authentication with JWT native';
 end;
 
 procedure Register;
 begin
- RegisterProjectFileDescriptor(TD2BridgeNewRestAPIAuthUnitWizard.Create);
+ RegisterProjectFileDescriptor(TD2BridgeNewRestAPIAuthClassUnitWizard.Create);
 end;
 
 end.

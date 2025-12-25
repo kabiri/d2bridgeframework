@@ -9,6 +9,7 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
   ClientWidth = 740
   Position = poDesktopCenter
   LCLVersion = '4.4.0.0'
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   object Panel_Container: TPanel

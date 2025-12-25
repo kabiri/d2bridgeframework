@@ -55,7 +55,7 @@ Email: talisjonatas@me.com"/>
 
   God bless you
  +--------------------------------------------------------------------------+"/>
-    <Version Major="2" Minor="31"/>
+    <Version Major="2" Minor="51"/>
     <Files>
       <Item>
         <Filename Value="Lazarus\d2bridge.newproject.wizard.fpc.pas"/>
@@ -99,6 +99,11 @@ Email: talisjonatas@me.com"/>
         <UnitName Value="D2Bridge.NewRestAPIAuthUnit.Wizard"/>
       </Item>
       <Item>
+        <Filename Value="Lazarus\D2Bridge.NewRestAPIAuthClassUnit.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.NewRestAPIAuthClassUnit.Wizard"/>
+      </Item>
+      <Item>
         <Filename Value="Lazarus\D2Bridge.NewRestAPICrudUnit.Wizard.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="D2Bridge.NewRestAPICrudUnit.Wizard"/>
@@ -107,6 +112,31 @@ Email: talisjonatas@me.com"/>
         <Filename Value="Lazarus\D2Bridge.NewRestAPISession.Wizard.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="D2Bridge.NewRestAPISession.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.RestAPITransport.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.RestAPITransport.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.RestRootAPI.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.RestRootAPI.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.RestClientModuleAuth.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.RestClientModuleAuth.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.RestClientModule.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.RestClientModule.Wizard"/>
+      </Item>
+      <Item>
+        <Filename Value="Lazarus\D2Bridge.RestClientModuleCrud.Wizard.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="D2Bridge.RestClientModuleCrud.Wizard"/>
       </Item>
       <Item>
         <Filename Value="Commom\D2Bridge.NewForm.Wizard.Commom.pas"/>

@@ -78,31 +78,31 @@ type
    procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
 {$IFDEF FPC}
-   procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
+   procedure AddGet(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean = false; EntityClass: TClass = nil); overload;
 {$ENDIF}
    procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
    procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
 {$IFDEF FPC}
-   procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
+   procedure AddPost(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean = false; EntityClass: TClass = nil); overload;
 {$ENDIF}
    procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
    procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
 {$IFDEF FPC}
-   procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
+   procedure AddPut(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean = false; EntityClass: TClass = nil); overload;
 {$ENDIF}
    procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
    procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
 {$IFDEF FPC}
-   procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
+   procedure AddPatch(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean = false; EntityClass: TClass = nil); overload;
 {$ENDIF}
    procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteCallBack); overload;
    procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean); overload;
    procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
 {$IFDEF FPC}
-   procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean; EntityClass: TClass); overload;
+   procedure AddDelete(const Path: string; ACallBack: TD2BridgeRestRouteMethodCallBack; RequireAuth: boolean = false; EntityClass: TClass = nil); overload;
 {$ENDIF}
 
    property OnNewRestSession: TOnRestSession read GetOnNewRestSession write SetOnNewRestSession;
@@ -277,7 +277,10 @@ begin
 
  vD2BridgeRoutes:= PrismBaseClass.Rest.Routes as TD2BridgeRestRoutes;
 
- vD2BridgeRoutes.Add(AWebMethod, Path, ACallBack, RequireAuth, TD2BridgeRestEntityClass(EntityClass));
+ if Assigned(EntityClass) then
+  vD2BridgeRoutes.Add(AWebMethod, Path, ACallBack, RequireAuth, TD2BridgeRestEntityClass(EntityClass))
+ else
+  vD2BridgeRoutes.Add(AWebMethod, Path, ACallBack, RequireAuth, nil);
 {$ENDIF}
 end;
 {$ENDIF}

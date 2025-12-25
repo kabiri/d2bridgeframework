@@ -106,6 +106,7 @@ begin
 
  FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API';
  FNewUnitForm.Edit_ClassName.Text:= 'TAPIFile';
+ FNewUnitForm.EnableCreateNewUnit:= false;
  FNewUnitForm.ShowModal;
 
  if not FNewUnitForm.EnableCreateNewUnit then

@@ -80,7 +80,7 @@ begin
  DefaultFileExt:= '.pas';
  UseCreateFormStatements:= False;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit4'; //CFileDescritor
+ Name := 'D2BridgeWizardAPINewUnit5'; //CFileDescritor
  FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
 end;
 
@@ -108,6 +108,7 @@ begin
  FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Crud';
  FNewUnitForm.Edit_ClassName.Text:= 'MyTable';
  FNewUnitForm.Label3.Caption:= 'Table Name:';
+ FNewUnitForm.EnableCreateNewUnit:= false;
  //FNewUnitForm.Edit_TableName.Visible:= true;
  //FNewUnitForm.Edit_TableName.Text:= 'MyTable';
  FNewUnitForm.ShowModal;

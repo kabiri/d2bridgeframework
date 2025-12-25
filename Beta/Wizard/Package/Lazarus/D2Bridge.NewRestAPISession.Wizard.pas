@@ -74,7 +74,7 @@ begin
  DefaultFileExt:= '.pas';
  UseCreateFormStatements:= True;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit5'; //CFileDescritor
+ Name := 'D2BridgeWizardAPINewUnit6'; //CFileDescritor
 end;
 
 function TD2BridgeNewRestAPISessionWizard.Init(var NewFilename: string;

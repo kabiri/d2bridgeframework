@@ -31,7 +31,7 @@
  +--------------------------------------------------------------------------+
 }
 
-unit D2Bridge.NewRestAPIAuthUnit.Wizard;
+unit D2Bridge.RestClientModuleCrud.Wizard;
 
 {$mode objfpc}{$H+}
 
@@ -45,13 +45,14 @@ uses
 
 type
 
- { TD2BridgeNewRestAPIAuthUnitWizard }
+ { TD2BridgeNewRestCrudAPIUnitWizard }
 
- TD2BridgeNewRestAPIAuthUnitWizard = class (TProjectFileDescriptor)
+ TD2BridgeNewRestCrudAPIUnitWizard = class (TProjectFileDescriptor)
  private
   FNewUnitForm: TD2BridgeConfigNewUnitForm;
   FClassName: string;
   FUnitName: string;
+  FTable: string;
  protected
   function Init(var NewFilename: string; NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult; override;
   function Initialized({%H-}NewFile: TLazProjectFile): TModalResult; override;
@@ -69,28 +70,28 @@ procedure Register;
 
 implementation
 
-{ TD2BridgeNewRestAPIAuthUnitWizard }
+{ TD2BridgeNewRestCrudAPIUnitWizard }
 
-constructor TD2BridgeNewRestAPIAuthUnitWizard.Create;
+constructor TD2BridgeNewRestCrudAPIUnitWizard.Create;
 begin
  inherited Create;
- DefaultFilename:= 'Unit1';
- DefaultSourceName:= 'Unit1';
+ DefaultFilename:= 'CrudEndPoint.API';
+ DefaultSourceName:= 'CrudEndPoint.API';
  DefaultFileExt:= '.pas';
- UseCreateFormStatements:= false;
+ UseCreateFormStatements:= False;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit3'; //CFileDescritor
+ Name := 'D2BridgeWizardAPIClient5'; //CFileDescritor
  FNewUnitForm:= TD2BridgeConfigNewUnitForm.Create(nil);
 end;
 
-destructor TD2BridgeNewRestAPIAuthUnitWizard.Destroy;
+destructor TD2BridgeNewRestCrudAPIUnitWizard.Destroy;
 begin
  FNewUnitForm.Free;
 
  inherited Destroy;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.Init(var NewFilename: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.Init(var NewFilename: string;
   NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult;
 var
  vPathWizard: string;
@@ -104,9 +105,12 @@ begin
   exit;
  end;
 
- FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Authentication';
- FNewUnitForm.Edit_ClassName.Text:= 'TAPIAuth';
+ FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Client Module Crud';
+ FNewUnitForm.Edit_ClassName.Text:= 'TMyEndPointsAPI';
+ FNewUnitForm.Label3.Caption:= 'Class Name:';
  FNewUnitForm.EnableCreateNewUnit:= false;
+ FNewUnitForm.Edit_TableName.Visible:= true;
+ FNewUnitForm.Edit_TableName.Text:= 'MyTable';
  FNewUnitForm.ShowModal;
 
  if not FNewUnitForm.EnableCreateNewUnit then
@@ -115,23 +119,24 @@ begin
   exit;
  end;
 
+ FTable:= Trim(FNewUnitForm.Edit_ClassName.Text);
+
  //Fix ClassName and UnitName
- FClassName:= FNewUnitForm.Edit_ClassName.Text;
+ FClassName:= 'ApiCrud' + FNewUnitForm.Edit_ClassName.Text;
  if FClassName.StartsWith('T') then
   FClassName:= Copy(FClassName, 2, 99999999);
  FUnitName:= FClassName;
-
 
  Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
  //ResourceClass:= TForm;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
+function TD2BridgeNewRestCrudAPIUnitWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
 begin
  Result:=inherited Initialized(NewFile);
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.CreateSource(const Filename: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.CreateSource(const Filename: string;
  const SourceName: string; const ResourceName: string): string;
 var
  vPathNewFormPAS: string;
@@ -145,7 +150,7 @@ begin
   vPathWizard + PathDelim +
   'FORMS' + PathDelim +
   'Wizard'  + PathDelim +
-  'RestAPIAuth.Laz.pas';
+  'Crud.API.Client.pas';
 
  vNewFormPASFile:= TStringStream.Create('', TEncoding.UTF8);
  vNewFormPASFile.LoadFromFile(GetRealFilePath(vPathNewFormPas));
@@ -159,27 +164,34 @@ begin
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASS_ID>', FClassName, [rfIgnoreCase, rfReplaceAll]);
  sNewFormPASContent := StringReplace(sNewFormPASContent, '<CLASSINHERITED>', 'TD2BridgeForm', [rfIgnoreCase, rfReplaceAll]);
 
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<ApiClientModuleName>', FClassName, [rfIgnoreCase, rfReplaceAll]);
+
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<TABLENAME>', FTable, [rfIgnoreCase, rfReplaceAll]);
+ sNewFormPASContent := StringReplace(sNewFormPASContent, '<TABLENAMELOWER>', LowerCase(FTable), [rfIgnoreCase, rfReplaceAll]);
+
  result:= sNewFormPASContent;
 
    //Result := StringReplace(Result, '<ANCESTOR_ID>', FixAncestorClass,
    //  [rfReplaceAll, rfIgnoreCase]);
 
+ //ShowMessage(result);
+
  vNewFormPASFile.free;
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedName: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.GetLocalizedName: string;
 begin
- Result := 'D2Bridge REST API Autentication';
+ Result := 'D2Bridge REST API Module Client CRUD';
 end;
 
-function TD2BridgeNewRestAPIAuthUnitWizard.GetLocalizedDescription: string;
+function TD2BridgeNewRestCrudAPIUnitWizard.GetLocalizedDescription: string;
 begin
- Result:= 'Create a D2Bridge Rest API Authentication with JWT native';
+ Result:= 'Create a new D2Bridge Rest API Module Client Crud from List All, Get, Post, Put and Delete for use with Root API';
 end;
 
 procedure Register;
 begin
- RegisterProjectFileDescriptor(TD2BridgeNewRestAPIAuthUnitWizard.Create);
+ RegisterProjectFileDescriptor(TD2BridgeNewRestCrudAPIUnitWizard.Create);
 end;
 
 end.

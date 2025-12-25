@@ -14,7 +14,7 @@ unit <UNITNAME>;
 interface
 
 uses
-  Classes, SysUtils,
+  Classes, SysUtils, DB,
 {$IFDEF FPC}
   fpjson,
 {$ELSE}
@@ -22,7 +22,8 @@ uses
 {$ENDIF}
   Prism.Types,
   D2Bridge.JSON,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 implementation
 
@@ -42,7 +43,13 @@ begin
    Open;
  end;
  
- Response.JSON(RestSession.DM.<TABLENAME>);
+ if RestSession.DM.<TABLENAME>.IsEmpty then
+ begin
+  Response.JSON(HTTPStatus.SuccessNoContent, '<TABLENAME> not found');
+  exit; 
+ end; 
+ 
+ Response.JSON(HTTPStatus.SuccessOK, RestSession.DM.<TABLENAME>);
 } 
 end;
 
@@ -75,11 +82,11 @@ begin
  
  if RestSession.DM.<TABLENAME>.IsEmpty then
  begin
-  Response.JSON(HTTPStatus.ErrorNotFound, '<TABLENAME> not found');
+  Response.JSON(HTTPStatus.SuccessNoContent, '<TABLENAME> not found');
   exit; 
  end;
  
- Response.JSON(RestSession.DM.<TABLENAME>); 
+ Response.JSON(HTTPStatus.SuccessOK, RestSession.DM.<TABLENAME>); 
 } 
 end;
 
@@ -100,14 +107,22 @@ begin
 { 
  with RestSession.DM.<TABLENAME> do
  begin
-   Append;
-   FieldByName('name').AsString  := Request.BodyJSON.Get('name', '');
-   FieldByName('price').AsFloat  := Request.BodyJSON.Get('price', 0.0);
-   Post;
+  close;
+  sql.text:=
+   'Select * from <TABLENAME> Where id < 0';
+  open;  
  end;
+
+ RestSession.DM.<TABLENAME>.Append;
+ RestSession.DM.<TABLENAME>.FieldByName('idTable').AsString  := Request.BodyJSON.Get('idTable', '');
+ RestSession.DM.<TABLENAME>.FieldByName('price').AsFloat  := Request.BodyJSON.Get('price', 0.0);
+
+ RestSession.DM.<TABLENAME>.FromJSONObject(Request.BodyJSON, ['idTable']); 
+ 
+
  
  Response.JSON(HTTPStatus.SuccessCreated, '<TABLENAME> created');
- Response.JSON('id', RestSession.DM.<TABLENAME>.FieldByName('id').AsInteger); 
+ Response.JSON.AddPair('id', RestSession.DM.<TABLENAME>.FieldByName('id').AsInteger); 
 } 
 end;
 
@@ -135,6 +150,18 @@ begin
   exit;
  end;
  
+ if not Assigned(Request.BodyJSON.Find('id')) then
+ begin
+  Response.JSON(HTTPStatus.ErrorBadRequest, 'Invalid JSON Body from <TABLENAME>');
+  exit;
+ end;
+ 
+ if Request.BodyJSON.Get('id', 0) <> vId then
+ begin
+  Response.JSON(HTTPStatus.ErrorBadRequest, 'Error Id mismatch');
+  exit;
+ end;
+ 
 {
  with RestSession.DM.<TABLENAME> do
  begin
@@ -150,18 +177,7 @@ begin
    Exit;
  end;
 
- with RestSession.DM.<TABLENAME> do
- begin
-   Edit;
-
-  	if Request.BodyJSON.Find('name') <> nil then
- 	FieldByName('name').AsString :=	Request.BodyJSON.Get('name', FieldByName('name').AsString);
-
-  	if Request.BodyJSON.Find('price') <> nil then
- 	FieldByName('price').AsFloat :=	Request.BodyJSON.Get('price', FieldByName('price').AsFloat);
-
-   Post;
- end;
+ RestSession.DM.<TABLENAME>.FromJSONObject(Request.BodyJSON, ['idTable']);
 
  Response.JSON(HTTPStatus.SuccessOK, '<TABLENAME> id ' + IntToStr(vId) + ' updated');
 } 

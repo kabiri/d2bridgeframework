@@ -45,7 +45,7 @@ uses
 
 {$ENDIF}
   Prism.Server.HTTP.Commom,
-  D2Bridge.Rest.Client, D2Bridge.Rest.Request, D2Bridge.Rest.Route.CallBack,
+  D2Bridge.Rest.Client.Internal, D2Bridge.Rest.Request, D2Bridge.Rest.Route.CallBack,
   D2Bridge.Rest.Interfaces, D2Bridge.Rest.Session;
 
 
