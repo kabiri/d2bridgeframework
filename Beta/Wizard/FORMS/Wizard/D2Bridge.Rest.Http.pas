@@ -74,6 +74,7 @@ type
   function Cookies: TStrings;
 
   function Success: Boolean;
+  function SuccessWithContent: Boolean;	
   function URL: string;
   function Method: string;
 
@@ -129,6 +130,7 @@ type
   function Cookies: TStrings;
 
   function Success: Boolean;
+  function SuccessWithContent: Boolean;
   function URL: string;
   function Method: string;
 
@@ -1598,6 +1600,11 @@ end;
 function TD2BridgeRestResponse.Success: Boolean;
 begin
  Result := (FStatusCode >= 200) and (FStatusCode < 300);
+end;
+
+function TD2BridgeRestResponse.SuccessWithContent: Boolean;
+begin
+ result:= Success and (FStatusCode <> 204);
 end;
 
 function TD2BridgeRestResponse.URL: string;
