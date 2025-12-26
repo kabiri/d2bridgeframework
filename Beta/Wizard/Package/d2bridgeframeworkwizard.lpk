@@ -55,7 +55,7 @@ Email: talisjonatas@me.com"/>
 
   God bless you
  +--------------------------------------------------------------------------+"/>
-    <Version Major="2" Minor="51"/>
+    <Version Major="2" Minor="52"/>
     <Files>
       <Item>
         <Filename Value="Lazarus\d2bridge.newproject.wizard.fpc.pas"/>

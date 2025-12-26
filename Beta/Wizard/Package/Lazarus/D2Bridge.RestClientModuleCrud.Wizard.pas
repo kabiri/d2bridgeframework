@@ -119,10 +119,10 @@ begin
   exit;
  end;
 
- FTable:= Trim(FNewUnitForm.Edit_ClassName.Text);
+ FTable:= Trim(FNewUnitForm.Edit_TableName.Text);
 
  //Fix ClassName and UnitName
- FClassName:= 'ApiCrud' + FNewUnitForm.Edit_ClassName.Text;
+ FClassName:= FNewUnitForm.Edit_ClassName.Text;
  if FClassName.StartsWith('T') then
   FClassName:= Copy(FClassName, 2, 99999999);
  FUnitName:= FClassName;
