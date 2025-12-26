@@ -1169,10 +1169,9 @@ begin
 
    for I := 0 to Pred(Self.FieldCount) do
    begin
+    vAbortField:= false;
     if Length(AExcludeFields) > 0 then
     begin
-     vAbortField:= false;
-
      for X := 0 to Pred(Length(AExcludeFields)) do
      begin
       if SameText(Self.Fields[I].FieldName, AExcludeFields[X]) then
