@@ -154,9 +154,13 @@ type
  TDataSetToJSONHelper = class helper for TDataSet
   public
    function ToJSON: TJSONArray; overload;
+   function ToJSON(AExcludeFields: array of string): TJSONArray; overload;
    function ToJSON(AShowMetaData: Boolean): TJSONObject; overload;
+   function ToJSON(AExcludeFields: array of string; AShowMetaData: Boolean): TJSONObject; overload;
    function ToJSON(AMaxRecords: Integer; AOffSet: Integer = 0): TJSONArray; overload;
+   function ToJSON(AExcludeFields: array of string; AMaxRecords: Integer; AOffSet: Integer = 0): TJSONArray; overload;
    function ToJSON(AMaxRecords: Integer; AOffSet: Integer; AShowMetaData: Boolean): TJSONObject; overload;
+   function ToJSON(AExcludeFields: array of string; AMaxRecords: Integer; AOffSet: Integer; AShowMetaData: Boolean): TJSONObject; overload;
    procedure FromJSONArray(AJSONArrayData: TJSONArray); overload;
    procedure FromJSONArray(AJSONArrayData: TJSONArray; AFormatSettings: TFormatSettings); overload;
    procedure FromJSONArray(AJSONArrayData: TJSONArray; AExcludeFields: array of string); overload;
@@ -969,66 +973,8 @@ begin
 end;
 
 function TDataSetToJSONHelper.ToJSON(AMaxRecords, AOffSet: Integer): TJSONArray;
-var
- vJSONArrayColumns: TJSONArray;
- vJSONDataArray: TJSONArray;
- I: integer;
- vPos: integer;
- vFormatSettings: TFormatSettings;
 begin
- result:= nil;
-
- if Assigned(Self) and
-    Self.Active and
-    (Self.RecordCount > 0) and
-    (((AMaxRecords <= 0) or
-       ((AMaxRecords > 0) and ((Self.RecordCount - AOffSet) >= 0)))) then
- begin
-  {$IFDEF D2BRIDGE}
-   vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
-  {$ELSE}
-   vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
-  {$ENDIF}
-
-
-  vPos:= Self.RecNo;
-  Self.DisableControls;
-
-  if AOffSet > 0 then
-   Self.RecNo := AOffSet
-  else
-   Self.First;
-
-  try
-   vJSONArrayColumns:= TJSONArray.Create;
-
-   for I := 0 to Pred(Self.FieldCount) do
-   begin
-    {$IFDEF D2BRIDGE}
-     if PrismBaseClass.Rest.Options.FieldNameLowerCase then
-      vJSONArrayColumns.Add(LowerCase(Self.Fields[I].FieldName))
-     else
-      vJSONArrayColumns.Add(Self.Fields[I].FieldName);
-    {$ELSE}
-      vJSONArrayColumns.Add(Self.Fields[I].FieldName);
-    {$ENDIF}
-   end;
-
-   result:= DataSetToJSON(self, vJSONArrayColumns, AMaxRecords, true, vFormatSettings, false);
-
-   vJSONArrayColumns.Free;
-   //vJSONDataArray.Free;
-  except
-  end;
-
-  Self.RecNo:= vPos;
-  Self.EnableControls;
- end else
- begin
-  vJSONDataArray:= TJSONArray.Create;
-  result:= vJSONDataArray.NewClone as TJSONArray;
-  vJSONDataArray.Free;
- end;
+ result:= ToJSON([], AMaxRecords, AOffSet);
 end;
 
 procedure TDataSetToJSONHelper.FromJSONArray(AJSONArrayData: TJSONArray);
@@ -1084,47 +1030,8 @@ begin
 end;
 
 function TDataSetToJSONHelper.ToJSON(AMaxRecords, AOffSet: Integer; AShowMetaData: Boolean): TJSONObject;
-var
- vJSONMetaData: TJSONObject;
- Total, Count: Integer;
- HasMore: Boolean;
 begin
- result:= TJSONObject.Create;
-
- try
-  if AShowMetaData then
-  begin
-   Total := Self.RecordCount;
-
-   // Calcular o número real de registros retornados
-   if (AOffset >= Total) then
-    Count := 0
-   else if (AMaxRecords = 0) or (AOffset + AMaxRecords > Total) then
-    Count := Total - AOffset
-   else
-    Count := AMaxRecords;
-
-   HasMore := (AOffset + Count) < Total;
-
-   vJSONMetaData:= TJSONObject.Create;
-   vJSONMetaData.AddPair('total', {$IFnDEF FPC}TJSONNumber.Create(total){$ELSE}total{$ENDIF});
-   vJSONMetaData.AddPair('limit', {$IFnDEF FPC}TJSONNumber.Create(AMaxRecords){$ELSE}AMaxRecords{$ENDIF});
-   vJSONMetaData.AddPair('offset', {$IFnDEF FPC}TJSONNumber.Create(AOffset){$ELSE}AOffset{$ENDIF});
-   vJSONMetaData.AddPair('count', {$IFnDEF FPC}TJSONNumber.Create(Count){$ELSE}Count{$ENDIF});
-   vJSONMetaData.AddPair('hasmore', {$IFnDEF FPC}TJSONBool.Create(HasMore){$ELSE}HasMore{$ENDIF});
-
-   if Count = 0 then
-    result.AddPair('message', 'No records found for the specified offset.')
-   else
-    result.AddPair('message', Format('%d records returned successfully.', [Count]));
-
-   result.AddPair('pagination', vJSONMetaData);
-   //vJSONMetaData.Free;
-  end;
- except
- end;
-
- result.AddPair('data', ToJSON(AMaxRecords, AOffSet));
+ result:= ToJSON([], AMaxRecords, AOffSet, AShowMetaData);
 end;
 
 
@@ -1210,6 +1117,146 @@ procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
   AExcludeFields: array of string);
 begin
  AJSONObject.ToDataSet(Self, AFormatSettings, ADataArrayName, AExcludeFields);
+end;
+
+function TDataSetToJSONHelper.ToJSON(
+  AExcludeFields: array of string): TJSONArray;
+begin
+ result:= ToJSON(AExcludeFields, {$IFDEF D2BRIDGE}PrismBaseClass.Rest.Options.MaxRecord{$ELSE}0{$ENDIF}, 0);
+end;
+
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AShowMetaData: Boolean): TJSONObject;
+begin
+ result:= ToJSON(AExcludeFields, {$IFDEF D2BRIDGE}PrismBaseClass.Rest.Options.MaxRecord{$ELSE}0{$ENDIF}, 0, AShowMetaData);
+end;
+
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AMaxRecords, AOffSet: Integer): TJSONArray;
+var
+ vJSONArrayColumns: TJSONArray;
+ vJSONDataArray: TJSONArray;
+ I, X: integer;
+ vPos: integer;
+ vFormatSettings: TFormatSettings;
+ vAbortField: boolean;
+begin
+ result:= nil;
+
+ if Assigned(Self) and
+    Self.Active and
+    (Self.RecordCount > 0) and
+    (((AMaxRecords <= 0) or
+       ((AMaxRecords > 0) and ((Self.RecordCount - AOffSet) >= 0)))) then
+ begin
+  {$IFDEF D2BRIDGE}
+   vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
+  {$ELSE}
+   vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
+  {$ENDIF}
+
+
+  vPos:= Self.RecNo;
+  Self.DisableControls;
+
+  if AOffSet > 0 then
+   Self.RecNo := AOffSet
+  else
+   Self.First;
+
+  try
+   vJSONArrayColumns:= TJSONArray.Create;
+
+   for I := 0 to Pred(Self.FieldCount) do
+   begin
+    if Length(AExcludeFields) > 0 then
+    begin
+     vAbortField:= false;
+
+     for X := 0 to Pred(Length(AExcludeFields)) do
+     begin
+      if SameText(Self.Fields[I].FieldName, AExcludeFields[X]) then
+      begin
+       vAbortField:= true;
+       break;
+      end;
+     end;
+    end;
+
+    if vAbortField then
+     Continue;
+
+    {$IFDEF D2BRIDGE}
+     if PrismBaseClass.Rest.Options.FieldNameLowerCase then
+      vJSONArrayColumns.Add(LowerCase(Self.Fields[I].FieldName))
+     else
+      vJSONArrayColumns.Add(Self.Fields[I].FieldName);
+    {$ELSE}
+      vJSONArrayColumns.Add(Self.Fields[I].FieldName);
+    {$ENDIF}
+   end;
+
+   result:= DataSetToJSON(self, vJSONArrayColumns, AMaxRecords, true, vFormatSettings, false);
+
+   vJSONArrayColumns.Free;
+   //vJSONDataArray.Free;
+  except
+  end;
+
+  Self.RecNo:= vPos;
+  Self.EnableControls;
+ end else
+ begin
+  vJSONDataArray:= TJSONArray.Create;
+  result:= vJSONDataArray.NewClone as TJSONArray;
+  vJSONDataArray.Free;
+ end;
+end;
+
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AMaxRecords, AOffSet: Integer; AShowMetaData: Boolean): TJSONObject;
+var
+ vJSONMetaData: TJSONObject;
+ Total, Count: Integer;
+ HasMore: Boolean;
+begin
+ result:= TJSONObject.Create;
+
+ try
+  if AShowMetaData then
+  begin
+   Total := Self.RecordCount;
+
+   // Calcular o número real de registros retornados
+   if (AOffset >= Total) then
+    Count := 0
+   else if (AMaxRecords = 0) or (AOffset + AMaxRecords > Total) then
+    Count := Total - AOffset
+   else
+    Count := AMaxRecords;
+
+   HasMore := (AOffset + Count) < Total;
+
+   vJSONMetaData:= TJSONObject.Create;
+   vJSONMetaData.AddPair('total', {$IFnDEF FPC}TJSONNumber.Create(total){$ELSE}total{$ENDIF});
+   vJSONMetaData.AddPair('limit', {$IFnDEF FPC}TJSONNumber.Create(AMaxRecords){$ELSE}AMaxRecords{$ENDIF});
+   vJSONMetaData.AddPair('offset', {$IFnDEF FPC}TJSONNumber.Create(AOffset){$ELSE}AOffset{$ENDIF});
+   vJSONMetaData.AddPair('count', {$IFnDEF FPC}TJSONNumber.Create(Count){$ELSE}Count{$ENDIF});
+   vJSONMetaData.AddPair('hasmore', {$IFnDEF FPC}TJSONBool.Create(HasMore){$ELSE}HasMore{$ENDIF});
+
+   if Count = 0 then
+    result.AddPair('message', 'No records found for the specified offset.')
+   else
+    result.AddPair('message', Format('%d records returned successfully.', [Count]));
+
+   result.AddPair('pagination', vJSONMetaData);
+   //vJSONMetaData.Free;
+  end;
+ except
+ end;
+
+ result.AddPair('data', ToJSON(AExcludeFields, AMaxRecords, AOffSet));
+
 end;
 
 end.
