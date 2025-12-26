@@ -88,7 +88,7 @@ begin
 
  FToken:= vJSONAuth.Get('accessToken');
  FTokenRefresh:= ARefreshToken;
- FTokenExpires:= IncSecond(now, vJSONAuth.Get('expiresIn'));
+ FTokenExpires:= IncSecond(IncSecond(now, vJSONAuth.Get('expiresIn')),-20);
 end;
 
 function TAuthRestAPIClient.CurrentUser: ID2BridgeRestResponse;
@@ -158,7 +158,7 @@ begin
 
  FToken:= vJSONAuth.Get('accessToken');
  FTokenRefresh:= vJSONAuth.Get('refreshToken');
- FTokenExpires:= IncSecond(now, vJSONAuth.Get('expiresIn'));
+ FTokenExpires:= IncSecond(IncSecond(now, vJSONAuth.Get('expiresIn'))-20);
 end;
 
 procedure TAuthRestAPIClient.Logout;
@@ -186,13 +186,13 @@ begin
 
  if (FLogged) and (FTokenExpires < now) and (FTokenRefresh <> '') then
  begin
-  if (not RefreshToken(FTokenRefresh).Success) and (FUser <> '') and (FPassword <> '') then
-   Login(FUser, FPassword);
+ if (not RefreshToken(FTokenRefresh).Success) and (FUser <> '') and (FPassword <> '') then
+  Login(FUser, FPassword);
  end else
-  if (FUser <> '') and (FPassword <> '') then
+  if (not FLogged) and (FUser <> '') and (FPassword <> '') then
    Login(FUser, FPassword);
 
- result:= FToken;
+ result:= FToken; 
 end;
 
 function TAuthRestAPIClient.TokenExpires: TDateTime;
