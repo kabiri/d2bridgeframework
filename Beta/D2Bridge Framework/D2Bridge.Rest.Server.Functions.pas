@@ -89,7 +89,7 @@ function RestOptions: ID2BridgeRestOptions;
 function D2BridgeSessions: IPrismSessions;
 function Sessions: IPrismSessions;
 function AppConfig: ID2BridgeAPPConfig;
-
+function D2BridgeServerController: ID2BridgeServerControllerBase;
 
 implementation
 
@@ -249,5 +249,9 @@ begin
  result:= PrismBaseClass.ServerController.AppConfig;
 end;
 
+function D2BridgeServerController: ID2BridgeServerControllerBase;
+begin
+ result:= PrismBaseClass.ServerController;
+end;
 
 end.

@@ -169,9 +169,8 @@ type
    function IsD2DockerContext: Boolean;
 
    function NeedConsole: boolean;
-{$IFDEF D2DOCKER}
+
    function D2DockerInstanceAlias: string;
-{$ENDIF}
 
 {$IFDEF D2DOCKER}
    procedure StartD2Docker;
@@ -380,15 +379,15 @@ begin
 {$ENDIF}
 end;
 
-{$IFDEF D2DOCKER}
 function TD2BridgeServerControllerBase.D2DockerInstanceAlias: string;
 begin
  result:= '';
 
+{$IFDEF D2DOCKER}
  if IsD2DockerContext then
   result:= 'InstanceID'+IntToStr(D2BridgeManager.API.D2Docker.InstanceNumber) + 'C' + IntToStr(D2BridgeManager.API.D2Docker.ContainerId);
-end;
 {$ENDIF}
+end;
 
 destructor TD2BridgeServerControllerBase.Destroy;
 var

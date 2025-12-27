@@ -175,9 +175,7 @@ type
 
    function IsD2DockerContext: Boolean;
 
-{$IFDEF D2DOCKER}
    function D2DockerInstanceAlias: string;
-{$ENDIF}
 
 {$IFDEF D2DOCKER}
    procedure StartD2Docker;
