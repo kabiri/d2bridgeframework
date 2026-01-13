@@ -347,7 +347,7 @@ begin
    Add('$(document).ready(async function() {');
    Add(' try {');
    Add('   '+AnsiUpperCase(PrismControl.NamePrefix)+'mediaStream = await navigator.mediaDevices.getUserMedia({');
-   Add('     video: { deviceId: "' + CurrentDeviceId + '" }');
+   Add('     video: { deviceId: { exact : "' + CurrentDeviceId + '" }}');
    Add('   });');
    Add('   '+AnsiUpperCase(PrismControl.NamePrefix)+'videoElement.srcObject = '+AnsiUpperCase(PrismControl.NamePrefix)+'mediaStream;');
    Add('   '+AnsiUpperCase(PrismControl.NamePrefix)+'videoElement.style.removeProperty("height");');
