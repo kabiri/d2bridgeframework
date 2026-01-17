@@ -110,6 +110,19 @@ type
     function NewClone: TJSONValue;
   end;
 
+
+  { TJSONArrayHelper }
+
+  TJSONArrayHelper = class helper for TJSONArray
+   public
+    procedure ToDataSet(ADataSet: TDataset); overload;
+    procedure ToDataSet(ADataSet: TDataset; AFormatSettings: TFormatSettings); overload;
+    procedure ToDataSet(ADataSet: TDataset; AExcludeFields: array of string); overload;
+    procedure ToDataSet(ADataSet: TDataset; AFormatSettings: TFormatSettings; AExcludeFields: array of string); overload;
+  end;
+
+
+
   { TJSONObjectHelper }
 
   TJSONObjectHelper = class helper for TJSONObject
@@ -118,7 +131,6 @@ type
     function AddPair(const aStr: string; const aVal: TJSONValue): TJSONObject; overload;
     function AddPair(const aStr: string; const aVal: Variant): TJSONObject; overload;
 {$ENDIF}
-  public
 {$IFDEF FPC}
     function GetValue(const APath: string; ADefaultValue: String): String; overload;
     function GetValue(const APath: string; ADefaultValue: Boolean): Boolean; overload;
@@ -130,15 +142,35 @@ type
     procedure SetJsonValue(aIndex: Integer; aJSONValue: TJSONValue);
     function AddBase64File(const aStr: string; const aFileName: string): TJSONObject; overload;
     procedure GetBase64File(const aStr: string; const aSaveFileName: string);
+    procedure ToDataSet(ADataSet: TDataset; ADataArrayName: string = ''); overload;
+    procedure ToDataSet(ADataSet: TDataset; AFormatSettings: TFormatSettings; ADataArrayName: string = ''); overload;
+    procedure ToDataSet(ADataSet: TDataset; AExcludeFields: array of string); overload;
+    procedure ToDataSet(ADataSet: TDataset; AFormatSettings: TFormatSettings; AExcludeFields: array of string); overload;
+    procedure ToDataSet(ADataSet: TDataset; ADataArrayName: string; AExcludeFields: array of string); overload;
+    procedure ToDataSet(ADataSet: TDataset; AFormatSettings: TFormatSettings; ADataArrayName: string; AExcludeFields: array of string); overload;
   end;
 
 
  TDataSetToJSONHelper = class helper for TDataSet
   public
    function ToJSON: TJSONArray; overload;
+   function ToJSON(AExcludeFields: array of string): TJSONArray; overload;
    function ToJSON(AShowMetaData: Boolean): TJSONObject; overload;
+   function ToJSON(AExcludeFields: array of string; AShowMetaData: Boolean): TJSONObject; overload;
    function ToJSON(AMaxRecords: Integer; AOffSet: Integer = 0): TJSONArray; overload;
+   function ToJSON(AExcludeFields: array of string; AMaxRecords: Integer; AOffSet: Integer = 0): TJSONArray; overload;
    function ToJSON(AMaxRecords: Integer; AOffSet: Integer; AShowMetaData: Boolean): TJSONObject; overload;
+   function ToJSON(AExcludeFields: array of string; AMaxRecords: Integer; AOffSet: Integer; AShowMetaData: Boolean): TJSONObject; overload;
+   procedure FromJSONArray(AJSONArrayData: TJSONArray); overload;
+   procedure FromJSONArray(AJSONArrayData: TJSONArray; AFormatSettings: TFormatSettings); overload;
+   procedure FromJSONArray(AJSONArrayData: TJSONArray; AExcludeFields: array of string); overload;
+   procedure FromJSONArray(AJSONArrayData: TJSONArray; AFormatSettings: TFormatSettings; AExcludeFields: array of string); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; ADataArrayName: string = ''); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; AFormatSettings: TFormatSettings; ADataArrayName: string = ''); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; AExcludeFields: array of string); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; AFormatSettings: TFormatSettings; AExcludeFields: array of string); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; ADataArrayName: string; AExcludeFields: array of string); overload;
+   procedure FromJSONObject(AJSONObject: TJSONObject; AFormatSettings: TFormatSettings; ADataArrayName: string; AExcludeFields: array of string); overload;
  end;
 
 
@@ -168,6 +200,150 @@ Uses
 
 {$ENDIF}
 ;
+
+
+function FindJSONValue(AObj: TJSONObject; const AName: string): {$IFnDEF FPC}TJSONValue{$ELSE}TJSONData{$ENDIF};
+var
+  I: Integer;
+begin
+  Result := nil;
+
+  if AObj = nil then
+    Exit;
+
+  for I := 0 to AObj.Count - 1 do
+    if SameText(AObj.{$IFnDEF FPC}Pairs[I].JsonString.Value{$ELSE}Names[I]{$ENDIF}, AName) then
+      Exit(AObj.{$IFnDEF FPC}Pairs[I].JsonValue{$ELSE}Items[I]{$ENDIF});
+end;
+
+
+
+procedure JSONObjectToDataSetRow(ADataSet: TDataset; AJSON: TJSONObject; AFormatSettings: TFormatSettings; AExcludeFields: array of string);
+var
+ LValue: {$IFnDEF FPC}TJSONValue{$ELSE}TJSONData{$ENDIF};
+ I, B, F: Integer;
+ Field: TField;
+ Bytes: TBytes;
+ P: Integer;
+ vFieldName, vExcFieldName: string;
+ vContinue: boolean;
+begin
+ if not Assigned(ADataSet) then
+   Exit;
+
+ if not Assigned(AJSON) then
+   Exit;
+
+ // ISO / JSON settings
+ //FS := DefaultFormatSettings;
+ //FS.DecimalSeparator := '.';
+ //FS.DateSeparator := '-';
+ //FS.TimeSeparator := ':';
+ //FS.ShortDateFormat := 'yyyy-mm-dd';
+ //FS.LongTimeFormat := 'hh:nn:ss';
+
+ try
+  ADataSet.Edit;
+
+  for F := 0 to ADataSet.FieldCount - 1 do
+  begin
+   Field := ADataSet.Fields[F];
+   vFieldName:= Field.FieldName;
+
+
+   vContinue:= false;
+   if Length(AExcludeFields) > 0 then
+    for vExcFieldName in AExcludeFields do
+    begin
+     if SameText(vExcFieldName, vFieldName) then
+     begin
+      vContinue:= true;
+      break;
+     end;
+    end;
+    if vContinue then
+     Continue;
+
+
+   // Proteções importantes
+   if Field.ReadOnly or Field.Calculated or Field.Lookup then
+     Continue;
+
+   LValue := FindJSONValue(AJSON, vFieldName);
+   if LValue = nil then
+     Continue;
+
+   {$IFDEF FPC}
+   if LValue.JSONType = jtNull then
+   {$ELSE}
+   if LValue is TJSONNull then
+   {$ENDIF}
+   begin
+     Field.Clear;
+     Continue;
+   end;
+
+
+   case Field.DataType of
+
+    // Inteiros
+    ftSmallint, {$IFnDEF FPC}ftShortint,{$ENDIF} ftWord, ftInteger, ftAutoInc,
+    ftLargeint {$IFnDEF FPC}, ftLongWord{$ENDIF}:
+      Field.AsLargeInt := {$IFnDEF FPC}TJSONNumber(LValue).AsInt64{$ELSE}LValue.AsLargeInt{$ENDIF};
+
+    // Float / Extended / BCD
+    ftFloat, {$IFnDEF FPC}ftExtended, ftSingle,{$ENDIF} ftFMTBcd, ftBCD:
+      Field.AsFloat := StrToFloat({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, AFormatSettings);
+
+    ftCurrency:
+      Field.AsCurrency := StrToFloat({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, AFormatSettings);
+
+    // Boolean
+    ftBoolean:
+      Field.AsBoolean := SameText({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, 'true') or
+                         ({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF} = '1');
+
+    // Strings
+    ftString, ftWideString, ftMemo, ftFmtMemo, ftWideMemo, ftUnknown:
+      Field.AsString := {$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF};
+
+    // Datas
+    ftDate:
+      Field.AsDateTime := StrToDate({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, AFormatSettings);
+
+    ftTime:
+      Field.AsDateTime := StrToTime({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, AFormatSettings);
+
+    ftDateTime, ftTimeStamp:
+      Field.AsDateTime := StrToDateTime({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, AFormatSettings);
+
+    // Bytes (hex)
+    ftBytes:
+    begin
+      SetLength(Bytes, Length({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}) div 2);
+      P := 1;
+      for B := 0 to High(Bytes) do
+      begin
+        Bytes[B] := StrToInt('$' + Copy({$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF}, P, 2));
+        Inc(P, 2);
+      end;
+      Field.AsBytes := Bytes;
+    end;
+
+    // Blob (Base64 – compatível com seu serializer)
+    ftBlob:
+      Field.AsString := {$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF};
+
+   else
+    // fallback seguro
+    Field.AsString := {$IFnDEF FPC}TJSONString(LValue).Value{$ELSE}LValue.AsString{$ENDIF};
+   end;
+  end;
+
+  ADataSet.Post;
+ finally
+ end;
+end;
 
 
 { TJSONValueHelper }
@@ -446,6 +622,78 @@ begin
 end;
 
 
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset;
+  AFormatSettings: TFormatSettings; ADataArrayName: string;
+  AExcludeFields: array of string);
+var
+ vJSONArray: TJSONArray;
+begin
+ if ADataArrayName = '' then
+ begin
+  JSONObjectToDataSetRow(ADataSet, Self, AFormatSettings, AExcludeFields);
+ end else
+ begin
+  vJSONArray:= self.GetValue(ADataArrayName) as TJSONArray;
+
+  if Assigned(vJSONArray) then
+  begin
+   vJSONArray.ToDataSet(ADataSet, AFormatSettings, AExcludeFields);
+  end;
+ end;
+end;
+
+
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset;
+  AFormatSettings: TFormatSettings; AExcludeFields: array of string);
+begin
+ ToDataSet(ADataSet, AFormatSettings, '', AExcludeFields);
+end;
+
+
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset; AExcludeFields: array of string);
+var
+ vFormatSettings: TFormatSettings;
+begin
+{$IFDEF D2BRIDGE}
+ vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
+{$ELSE}
+ vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
+{$ENDIF}
+
+ ToDataSet(ADataSet, vFormatSettings, '', AExcludeFields);
+end;
+
+
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset; ADataArrayName: string; AExcludeFields: array of string);
+var
+ vJSONArray: TJSONArray;
+var
+ vFormatSettings: TFormatSettings;
+begin
+{$IFDEF D2BRIDGE}
+ vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
+{$ELSE}
+ vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
+{$ENDIF}
+
+ ToDataSet(ADataSet, vFormatSettings, ADataArrayName, AExcludeFields);
+end;
+
+
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset; ADataArrayName: string);
+var
+ vFormatSettings: TFormatSettings;
+begin
+{$IFDEF D2BRIDGE}
+ vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
+{$ELSE}
+ vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
+{$ENDIF}
+
+ ToDataSet(ADataSet, vFormatSettings, ADataArrayName, []);
+end;
+
+
 function TJSONObjectHelper.AddBase64File(const aStr, aFileName: string): TJSONObject;
 begin
  result:= self;
@@ -641,14 +889,14 @@ begin
                       if (ADataSet.Fields[lCols] as TNumericField).DisplayFormat <> '' then
                        lJSONObject.AddPair(lColName, FormatFloat((ADataSet.Fields[lCols] as TNumericField).DisplayFormat, ADataSet.fields[lcols].AsFloat, AFormatSettings))
                       else
-                       lJSONObject.AddPair(lColName, TJSONFloatNumber.Create(ADataSet.Fields[lCols].AsFloat));
+                       lJSONObject.AddPair(lColName, {$IFnDEF FPC}TJSONFloatNumber{$ELSE}TJSONFloatNumberFixed{$ENDIF}.Create(ADataSet.Fields[lCols].AsFloat));
                     end;
                     ftCurrency:
                     begin
                       if (ADataSet.Fields[lCols] as TCurrencyField).DisplayFormat <> '' then
                        lJSONObject.AddPair(lColName, FormatFloat((ADataSet.Fields[lCols] as TCurrencyField).DisplayFormat, ADataSet.fields[lcols].AsCurrency, AFormatSettings))
                       else
-                       lJSONObject.AddPair(lColName, TJSONFloatNumber.Create(ADataSet.Fields[lCols].AsCurrency));
+                       lJSONObject.AddPair(lColName, {$IFnDEF FPC}TJSONFloatNumber{$ELSE}TJSONFloatNumberFixed{$ENDIF}.Create(ADataSet.Fields[lCols].AsCurrency));
                     end;
                     ftSmallint{$IFDEF SUPPORTS_FTEXTENDED}, ftShortint, ftSingle{$ENDIF}, ftWord, ftInteger, ftAutoInc,
                     ftLargeint{$IFDEF SUPPORTS_FTEXTENDED}, ftLongWord{$ENDIF}:
@@ -731,25 +979,186 @@ begin
 end;
 
 function TDataSetToJSONHelper.ToJSON(AMaxRecords, AOffSet: Integer): TJSONArray;
+begin
+ result:= ToJSON([], AMaxRecords, AOffSet);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONArray(AJSONArrayData: TJSONArray);
+begin
+ AJSONArrayData.ToDataSet(self, []);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONArray(AJSONArrayData: TJSONArray;
+  AExcludeFields: array of string);
+begin
+ AJSONArrayData.ToDataSet(self, AExcludeFields);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
+  ADataArrayName: string);
+begin
+ AJSONObject.ToDataSet(Self, ADataArrayName);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONArray(AJSONArrayData: TJSONArray;
+  AFormatSettings: TFormatSettings);
+begin
+ AJSONArrayData.ToDataSet(self, AFormatSettings, []);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONArray(AJSONArrayData: TJSONArray;
+  AFormatSettings: TFormatSettings; AExcludeFields: array of string);
+begin
+ AJSONArrayData.ToDataSet(self, AFormatSettings, AExcludeFields);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject; ADataArrayName: string; AExcludeFields: array of string);
+begin
+ AJSONObject.ToDataSet(Self, ADataArrayName, AExcludeFields);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
+  AFormatSettings: TFormatSettings; AExcludeFields: array of string);
+begin
+ FromJSONObject(AJSONObject, AFormatSettings, '', AExcludeFields);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
+  AFormatSettings: TFormatSettings; ADataArrayName: string);
+begin
+ AJSONObject.ToDataSet(Self, AFormatSettings, ADataArrayName);
+end;
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
+  AExcludeFields: array of string);
+begin
+ FromJSONObject(AJSONObject, '', AExcludeFields);
+end;
+
+function TDataSetToJSONHelper.ToJSON(AMaxRecords, AOffSet: Integer; AShowMetaData: Boolean): TJSONObject;
+begin
+ result:= ToJSON([], AMaxRecords, AOffSet, AShowMetaData);
+end;
+
+
+
+{$IFDEF FPC}
+{ TJSONFloatNumberFixed }
+
+function TJSONFloatNumberFixed.GetAsString: TJSONStringType;
+var
+  F: TJSONFloat;
+  fs: TFormatSettings;
+begin
+  fs := DefaultFormatSettings;
+  fs.DecimalSeparator := '.';
+  fs.ThousandSeparator:= #0;
+  F := GetAsFloat;
+  Result := FormatFloat('0.0#########', F, fs); // format with your preferences
+end;
+{$ENDIF}
+
+
+
+
+{ TJSONArrayHelper }
+
+procedure TJSONArrayHelper.ToDataSet(ADataSet: TDataset; AExcludeFields: array of string);
+var
+ vFormatSettings: TFormatSettings;
+begin
+{$IFDEF D2BRIDGE}
+ vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
+{$ELSE}
+ vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
+{$ENDIF}
+
+ ToDataSet(ADataSet, vFormatSettings, AExcludeFields);
+end;
+
+
+procedure TJSONArrayHelper.ToDataSet(ADataSet: TDataset);
+begin
+ ToDataSet(ADataSet, []);
+end;
+
+
+procedure TJSONObjectHelper.ToDataSet(ADataSet: TDataset;
+  AFormatSettings: TFormatSettings; ADataArrayName: string);
+begin
+ ToDataSet(ADataSet, AFormatSettings, ADataArrayName, []);
+end;
+
+
+procedure TJSONArrayHelper.ToDataSet(ADataSet: TDataset;
+  AFormatSettings: TFormatSettings; AExcludeFields: array of string);
+var
+ I: integer;
+ vJSON: TJSONObject;
+begin
+ for I := 0 to Pred(Self.Count) do
+ begin
+  vJSON:= Self.Items[I] as TJSONObject;
+  if Assigned(vJSON) then
+  begin
+   if I = 0 then
+    ADataSet.Edit
+   else
+    ADataSet.Append;
+   vJSON.ToDataSet(ADataSet, AFormatSettings, '', AExcludeFields);
+  end;
+ end;
+end;
+
+
+procedure TJSONArrayHelper.ToDataSet(ADataSet: TDataset;
+  AFormatSettings: TFormatSettings);
+begin
+ ToDataSet(ADataSet, AFormatSettings, []);
+end;
+
+
+procedure TDataSetToJSONHelper.FromJSONObject(AJSONObject: TJSONObject;
+  AFormatSettings: TFormatSettings; ADataArrayName: string;
+  AExcludeFields: array of string);
+begin
+ AJSONObject.ToDataSet(Self, AFormatSettings, ADataArrayName, AExcludeFields);
+end;
+
+function TDataSetToJSONHelper.ToJSON(
+  AExcludeFields: array of string): TJSONArray;
+begin
+ result:= ToJSON(AExcludeFields, {$IFDEF D2BRIDGE}PrismBaseClass.Rest.Options.MaxRecord{$ELSE}0{$ENDIF}, 0);
+end;
+
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AShowMetaData: Boolean): TJSONObject;
+begin
+ result:= ToJSON(AExcludeFields, {$IFDEF D2BRIDGE}PrismBaseClass.Rest.Options.MaxRecord{$ELSE}0{$ENDIF}, 0, AShowMetaData);
+end;
+
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AMaxRecords, AOffSet: Integer): TJSONArray;
 var
  vJSONArrayColumns: TJSONArray;
  vJSONDataArray: TJSONArray;
- I: integer;
+ I, X: integer;
  vPos: integer;
  vFormatSettings: TFormatSettings;
+ vAbortField: boolean;
 begin
  result:= nil;
 
- if Assigned(Self) then
- if Self.Active then
- if (Self.RecordCount > 0) then
- if ((AMaxRecords <= 0) or
-       ((AMaxRecords > 0) and ((Self.RecordCount - AOffSet) >= 0))) then
+ if Assigned(Self) and
+    Self.Active and
+    (Self.RecordCount > 0) and
+    (((AMaxRecords <= 0) or
+       ((AMaxRecords > 0) and ((Self.RecordCount - AOffSet) >= 0)))) then
  begin
   {$IFDEF D2BRIDGE}
    vFormatSettings:= PrismBaseClass.Rest.Options.FormatSettings;
   {$ELSE}
-   vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}FormatSettings{$ENDIF};
+   vFormatSettings:= {$IFnDEF FPC}TFormatSettings.Create('en-US'){$ELSE}DefaultFormatSettings{$ENDIF};
   {$ENDIF}
 
 
@@ -766,6 +1175,22 @@ begin
 
    for I := 0 to Pred(Self.FieldCount) do
    begin
+    vAbortField:= false;
+    if Length(AExcludeFields) > 0 then
+    begin
+     for X := 0 to Pred(Length(AExcludeFields)) do
+     begin
+      if SameText(Self.Fields[I].FieldName, AExcludeFields[X]) then
+      begin
+       vAbortField:= true;
+       break;
+      end;
+     end;
+    end;
+
+    if vAbortField then
+     Continue;
+
     {$IFDEF D2BRIDGE}
      if PrismBaseClass.Rest.Options.FieldNameLowerCase then
       vJSONArrayColumns.Add(LowerCase(Self.Fields[I].FieldName))
@@ -785,10 +1210,16 @@ begin
 
   Self.RecNo:= vPos;
   Self.EnableControls;
+ end else
+ begin
+  vJSONDataArray:= TJSONArray.Create;
+  result:= vJSONDataArray.NewClone as TJSONArray;
+  vJSONDataArray.Free;
  end;
 end;
 
-function TDataSetToJSONHelper.ToJSON(AMaxRecords, AOffSet: Integer; AShowMetaData: Boolean): TJSONObject;
+function TDataSetToJSONHelper.ToJSON(AExcludeFields: array of string;
+  AMaxRecords, AOffSet: Integer; AShowMetaData: Boolean): TJSONObject;
 var
  vJSONMetaData: TJSONObject;
  Total, Count: Integer;
@@ -829,25 +1260,8 @@ begin
  except
  end;
 
- result.AddPair('data', ToJSON(AMaxRecords, AOffSet));
+ result.AddPair('data', ToJSON(AExcludeFields, AMaxRecords, AOffSet));
+
 end;
-
-
-
-{$IFDEF FPC}
-{ TJSONFloatNumberFixed }
-
-function TJSONFloatNumberFixed.GetAsString: TJSONStringType;
-var
-  F: TJSONFloat;
-  fs: TFormatSettings;
-begin
-  fs := DefaultFormatSettings;
-  fs.DecimalSeparator := '.';
-  fs.ThousandSeparator:= #0;
-  F := GetAsFloat;
-  Result := FormatFloat('0.0#########', F, fs); // format with your preferences
-end;
-{$ENDIF}
 
 end.

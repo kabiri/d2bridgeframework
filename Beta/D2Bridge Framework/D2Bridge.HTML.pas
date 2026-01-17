@@ -288,7 +288,8 @@ begin
   Result.Add('<!DOCTYPE html>');
  if FD2BridgeHTML.Options.IncluseHTMLTags then
  begin
-  if Pos('ar-', TD2BridgeClass(FD2BridgeHTML.FD2BridgeBaseClass).LangNav.Language.HTMLLang) > 0 then
+  if (Pos('ar-', TD2BridgeClass(FD2BridgeHTML.FD2BridgeBaseClass).LangNav.Language.HTMLLang) > 0) or
+     TD2BridgeClass(FD2BridgeHTML.FD2BridgeBaseClass).LangNav.Language.IsRTL then
    Result.add('<html lang="' + TD2BridgeClass(FD2BridgeHTML.FD2BridgeBaseClass).LangCode + '" dir="rtl">')
   else
    Result.add('<html lang="' + TD2BridgeClass(FD2BridgeHTML.FD2BridgeBaseClass).LangNav.Language.HTMLLang + '">');

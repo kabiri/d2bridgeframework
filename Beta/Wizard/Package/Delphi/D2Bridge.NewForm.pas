@@ -106,11 +106,14 @@ type
    FModuleIdent: String;
    FFormIdent: String;
    FAncestorIdent: string;
+   FParameter: string;
    FD2BridgeWizardFormCreator: TD2BridgeWizardFormCreator;
    function ClassNameFromAncestorIdent: string;
  public
-   constructor Create(const ModuleIdent, FormIdent, AncestorIdent: string); virtual;
+   constructor Create(const ModuleIdent, FormIdent, AncestorIdent, AParameter: string); virtual;
    function GetSource: String; override;
+
+   function GetParameter: string;
 
    property D2BridgeWizardFormCreator: TD2BridgeWizardFormCreator read FD2BridgeWizardFormCreator write FD2BridgeWizardFormCreator;
  end;
@@ -223,7 +226,7 @@ function TD2BridgeWizardFormCreator.NewImplSource(const ModuleIdent, FormIdent,
 begin
   Result := nil;
   if GetImplFile <> nil then
-    Result := GetImplFile.Create(ModuleIdent, FormIdent, AncestorIdent);
+    Result := GetImplFile.Create(ModuleIdent, FormIdent, AncestorIdent, '');
   TModuleCreatorFile(Result).FD2BridgeWizardFormCreator:= self;
 end;
 
@@ -232,7 +235,7 @@ function TD2BridgeWizardFormCreator.NewIntfSource(const ModuleIdent, FormIdent,
 begin
   Result := nil;
   if GetIntfFile <> nil then
-    Result := GetIntfFile.Create(ModuleIdent, FormIdent, AncestorIdent);
+    Result := GetIntfFile.Create(ModuleIdent, FormIdent, AncestorIdent, '');
   TModuleCreatorFile(Result).FD2BridgeWizardFormCreator:= self;
 end;
 
@@ -301,12 +304,18 @@ begin
  end;
 end;
 
-constructor TModuleCreatorFile.Create(const ModuleIdent, FormIdent, AncestorIdent: string);
+constructor TModuleCreatorFile.Create(const ModuleIdent, FormIdent, AncestorIdent, AParameter: string);
 begin
   FAge := -1; // Flag age as New File
   FModuleIdent := ModuleIdent;
   FFormIdent := FormIdent;
   FAncestorIdent := AncestorIdent;
+  FParameter:= AParameter;
+end;
+
+function TModuleCreatorFile.GetParameter: string;
+begin
+ result:= FParameter;
 end;
 
 function TModuleCreatorFile.GetSource: String;

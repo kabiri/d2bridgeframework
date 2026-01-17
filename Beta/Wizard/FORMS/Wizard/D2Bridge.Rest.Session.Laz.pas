@@ -21,12 +21,13 @@ type
    procedure Exec_CreateDM;
    procedure Exec_DestroyDM;   
   private
-
+   //FDM: TDM;
   public
-   //DM: TDM;
    //Variables
    //Classes
 
+   //function DM: TDM;
+ 
    constructor Create;
    destructor Destroy; override;
  end;
@@ -37,15 +38,14 @@ implementation
 
 { TD2BridgeRestSession }
 
+
 procedure TD2BridgeRestSession.Exec_CreateDM;
 begin
 { 
- DM:= nil;
+ if Assigned(FDM) then
+  exit;
 
- if Path <> '/whois' then
- begin
-  DM:= TDM.Create(nil);
- end;
+ FDM:= TDM.Create(nil);
 } 
 end;
 
@@ -54,8 +54,8 @@ begin
 {
  try
  //Destroy all instanced Object
- if Assigned(DM) then
-  DM.Free;
+ if Assigned(FDM) then
+  FDM.Free;
  except
  end;
 }
@@ -66,14 +66,10 @@ begin
  inherited;
 
 {
-  Data:= TMyCLass.Create;
-}
+ FDM:= nil;
 
-{
-  TThread.Synchronize(nil, Exec_CreateDM);   
-} 
-
-{
+ Data:= TMyCLass.Create;
+ 
  if WebMetho = wmtGET then //Get
  begin
   if Path = '/api/ping' then
@@ -87,13 +83,15 @@ begin
   end;
  end;
 }
+
 end;
 
 
 destructor TD2BridgeRestSession.Destroy;
 begin
 {
- TThread.Synchronize(nil, Exec_DestroyDM);
+ if Assigned(FDM) then
+  TThread.Synchronize(nil, Exec_DestroyDM);
 }
 
  //Destroy all instanced Object
@@ -101,6 +99,18 @@ begin
 
  inherited;
 end;
+
+
+
+//function TD2BridgeRestSession.DM: TDM;
+//begin
+// if FDM = nil then
+//  TThread.Synchronize(nil, Exec_CreateDM); 
+//
+// result:= FDM;
+//end;
+
+
 
 end.
 

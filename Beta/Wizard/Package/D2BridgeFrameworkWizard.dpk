@@ -53,12 +53,13 @@ contains
   D2Bridge.ConfigNewInheritedForm.View in 'Commom\Forms\D2Bridge.ConfigNewInheritedForm.View.pas' {D2BridgeConfigNewInheritedForm},
   D2Bridge.ConfigNewProject.View in 'Commom\Forms\D2Bridge.ConfigNewProject.View.pas' {D2BridgeConfigNewProject},
   D2Bridge.NewProject.Wizard.Common in 'Commom\D2Bridge.NewProject.Wizard.Common.pas',
-  D2Bridge.ConfigNewUnit.View in 'Delphi\D2Bridge.ConfigNewUnit.View.pas' {D2BridgeConfigNewUnitForm},
   D2Bridge.NewRestAPIClassUnit.Wizard in 'Delphi\D2Bridge.NewRestAPIClassUnit.Wizard.pas',
   D2Bridge.NewRestAPIUnit.Wizard in 'Delphi\D2Bridge.NewRestAPIUnit.Wizard.pas',
   D2Bridge.NewRestAPIAuthUnit.Wizard in 'Delphi\D2Bridge.NewRestAPIAuthUnit.Wizard.pas',
   D2Bridge.NewRestAPISession.Wizard in 'Delphi\D2Bridge.NewRestAPISession.Wizard.pas',
-  D2Bridge.BuildEvents in 'Delphi\D2Bridge.BuildEvents.pas';
+  D2Bridge.BuildEvents in 'Delphi\D2Bridge.BuildEvents.pas',
+  D2Bridge.ConfigNewUnit.View in 'Commom\Forms\D2Bridge.ConfigNewUnit.View.pas' {D2BridgeConfigNewUnitForm},
+  D2Bridge.NewRestAPICrudClassUnit.Wizard in 'Delphi\D2Bridge.NewRestAPICrudClassUnit.Wizard.pas';
 
 end.
 

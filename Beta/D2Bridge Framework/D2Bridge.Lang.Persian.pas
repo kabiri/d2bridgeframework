@@ -41,7 +41,7 @@ uses
 type
  TD2BridgeLangPersian = class(TD2BridgeLangBaseClass, ID2BridgeLang)
   private
-   function IsRTL: Boolean; override;
+
   public
    constructor Create(AD2BridgeLangCoreBaseClass: ID2BridgeLangCoreBaseClass; D2BridgeTermClass: TD2BridgeTermClass);
 
@@ -49,6 +49,8 @@ type
 
    function HTMLLang: string;
    function LangName: string;
+
+   function IsRTL: Boolean; override;
 
    Procedure DoConfigFormatSettings; virtual;
    procedure DoTranslate(const AContext: string; const ATerm: string; var ATranslated: string); overload; virtual;

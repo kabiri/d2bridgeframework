@@ -12,7 +12,8 @@ uses
   Classes, SysUtils, fpjson,
   Prism.Types,
   D2Bridge.JSON, D2Bridge.Rest.Entity,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 
 type
@@ -44,7 +45,7 @@ implementation
 //Register Endpoints
 class procedure T<CLASS_ID>.RegisterEndPoints;
 begin
- //AddGet('/api/ping', @GetPing, false); //True -> Require Auth JWT
+ //AddGet('/api/ping', GetPing, false); //True -> Require Auth JWT
 end;
 
 

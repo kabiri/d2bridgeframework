@@ -206,7 +206,7 @@ function TD2BridgeNewFormModule.NewImplSource(const ModuleIdent, FormIdent, Ance
 begin
  Result := nil;
  if GetImplFile <> nil then
-   Result := GetImplFile.Create(FModuleIdent, FFormIdent, FAncestorIdent);
+   Result := GetImplFile.Create(FModuleIdent, FFormIdent, FAncestorIdent, '');
 end;
 
 { TD2BridgeFormFileCreator }

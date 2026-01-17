@@ -43,8 +43,8 @@ uses
 {$ENDIF}
   D2Bridge.Rest.Route.CallBack, D2Bridge.Rest.Request, D2Bridge.Rest.Interfaces,
   D2Bridge.Rest.Session, D2Bridge.Rest.Session.Event,
-  D2Bridge.JSON,
-  Prism.Server.HTTP.Commom, Prism.Server.HTTP.Commom.StatusCode,
+  D2Bridge.JSON, D2Bridge.Interfaces,
+  Prism.Server.HTTP.Commom, Prism.Server.HTTP.Commom.StatusCode, Prism.Session,
   Prism.Security.JWT,
   Prism.Types, Prism.Interfaces;
 
@@ -56,6 +56,7 @@ type
  TD2BridgeRestRequest = D2Bridge.Rest.Request.TD2BridgeRestRequest;
  TD2BridgeRestSession = D2Bridge.Rest.Session.TD2BridgeRestSession;
  TPrismSecurityJWT = Prism.Security.JWT.TPrismSecurityJWT;
+ TPrismSession = Prism.Session.TPrismSession;
 
 
 {$I D2Bridge.Rest.Commom.Intf.inc}
@@ -86,7 +87,9 @@ procedure AfterRestMethod(const EventAfterRestMethod: TOnAfterRestMethod);
 function RestSecurity: ID2BridgeRestSecurity;
 function RestOptions: ID2BridgeRestOptions;
 function D2BridgeSessions: IPrismSessions;
-
+function Sessions: IPrismSessions;
+function AppConfig: ID2BridgeAPPConfig;
+function D2BridgeServerController: ID2BridgeServerControllerBase;
 
 implementation
 
@@ -236,5 +239,19 @@ begin
  result:= PrismBaseClass.Sessions;
 end;
 
+function Sessions: IPrismSessions;
+begin
+ result:= D2BridgeSessions;
+end;
+
+function AppConfig: ID2BridgeAPPConfig;
+begin
+ result:= PrismBaseClass.ServerController.AppConfig;
+end;
+
+function D2BridgeServerController: ID2BridgeServerControllerBase;
+begin
+ result:= PrismBaseClass.ServerController;
+end;
 
 end.

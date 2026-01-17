@@ -1,24 +1,26 @@
 object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
   Left = 0
-  Height = 252
+  Height = 301
   Top = 0
   Width = 740
   BorderIcons = []
   BorderStyle = bsNone
-  ClientHeight = 252
+  ClientHeight = 301
   ClientWidth = 740
   Position = poDesktopCenter
   LCLVersion = '4.4.0.0'
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnShow = FormShow
   object Panel_Container: TPanel
     Left = 0
-    Height = 252
+    Height = 301
     Top = 0
     Width = 740
     Align = alClient
     BevelOuter = bvSpace
     BevelWidth = 5
-    ClientHeight = 252
+    ClientHeight = 301
     ClientWidth = 740
     Color = 15640322
     ParentBackground = False
@@ -26,12 +28,12 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
     TabOrder = 0
     object Panel_Left: TPanel
       Left = 5
-      Height = 242
+      Height = 291
       Top = 5
       Width = 185
       Align = alLeft
       BevelOuter = bvNone
-      ClientHeight = 242
+      ClientHeight = 291
       ClientWidth = 185
       Color = 15640322
       ParentBackground = False
@@ -238,7 +240,7 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
       object Panel_Left_Button: TPanel
         Left = 0
         Height = 95
-        Top = 147
+        Top = 196
         Width = 185
         Align = alBottom
         BevelOuter = bvNone
@@ -254,7 +256,7 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
           Align = alClient
           AutoSize = False
           BorderSpacing.Around = 10
-          Caption = 'D2Bridge Framework'#13#10'by Talis Jonatas Gomes'#13#10#13#10'http://d2bridge.com.br'
+          Caption = 'D2Bridge Framework'#13#10'by Talis Jonatas Gomes'#13#10#13#10'https://d2bridge.com.br'
           Font.Color = clWhite
           Font.Height = -11
           Font.Name = 'Segoe UI'
@@ -267,12 +269,12 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
     end
     object Panel_Client: TPanel
       Left = 190
-      Height = 242
+      Height = 291
       Top = 5
       Width = 545
       Align = alClient
       BevelOuter = bvNone
-      ClientHeight = 242
+      ClientHeight = 291
       ClientWidth = 545
       Color = clWhite
       ParentBackground = False
@@ -345,7 +347,7 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
       object Panel_Client_Button: TPanel
         Left = 10
         Height = 47
-        Top = 185
+        Top = 234
         Width = 525
         Align = alBottom
         BorderSpacing.Around = 10
@@ -478,13 +480,13 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
       end
       object Panel_Client_Tabs: TPanel
         Left = 10
-        Height = 63
+        Height = 112
         Top = 112
         Width = 525
         Align = alClient
         BorderSpacing.Around = 10
         BevelOuter = bvNone
-        ClientHeight = 63
+        ClientHeight = 112
         ClientWidth = 525
         ParentBackground = False
         TabOrder = 2
@@ -533,6 +535,31 @@ object D2BridgeConfigNewUnitForm: TD2BridgeConfigNewUnitForm
           ParentBidiMode = False
           ParentFont = False
           TabOrder = 0
+          OnExit = Edit_ClassNameExit
+        end
+        object Label4: TLabel
+          Left = 7
+          Height = 13
+          Top = 84
+          Width = 61
+          Caption = 'Table Name:'
+          Font.Color = 9737364
+          Font.Height = -11
+          Font.Name = 'Segoe UI'
+          ParentFont = False
+        end
+        object Edit_TableName: TEdit
+          Left = 137
+          Height = 23
+          Top = 80
+          Width = 235
+          Font.Color = clBlack
+          Font.Height = -12
+          Font.Name = 'Segoe UI'
+          ParentBidiMode = False
+          ParentFont = False
+          TabOrder = 1
+          Visible = False
           OnExit = Edit_ClassNameExit
         end
       end

@@ -1749,6 +1749,7 @@ type
    function GetD2BridgeForms: TList<TObject>;
    function GetCallBacks: IPrismCallBacks;
    function GetPushID: string;
+   function GetAuthID: string;
    procedure SetData(AValue: TObject);
    function GetData: TObject;
    function GetFileDownloads: TDictionary<string, string>;
@@ -1854,6 +1855,7 @@ type
    property UUID: string read GetUUID;
    property CallBackID: string read GetCallBackID;
    property PushID: string read GetPushID;
+   property AuthID: string read GetAuthID;
    property Token: string read GetToken;
    property ActiveForm: IPrismForm read GetActiveForm;
    property D2BridgeForms: TList<TObject> read GetD2BridgeForms;
@@ -1882,6 +1884,7 @@ type
    procedure CloseAll;
    function FromThreadID(const AThreadID: Integer; AAlertErrorThreadID: Boolean = false): IPrismSession;
    function FromPushID(const APushID: string): IPrismSession;
+   function FromAuthID(const AAuthID: string): IPrismSession;
    function Items: TList<IPrismSession>;
    function GetMainThreadPrismSession: IPrismSession;
    procedure SetMainThreadPrismSession(APrismSession: IPrismSession);

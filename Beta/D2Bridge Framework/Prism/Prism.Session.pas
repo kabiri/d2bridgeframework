@@ -76,6 +76,7 @@ type
    FUUID: String;
    FCallBackID: String;
    FPushID: string;
+   FAuthID: string;
    FCreateDate: TDateTime;
    FD2BridgeInstance: TObject;
    FPrismBaseClass: IPrismBaseClass;
@@ -108,6 +109,7 @@ type
    function GetUUID: string;
    function GetCallBackID: string;
    function GetPushID: string;
+   function GetAuthID: string;
    Function GetActiveForm: IPrismForm;
    function GetD2BridgeForms: TList<TObject>;
    function GetCallBacks: IPrismCallBacks;
@@ -253,6 +255,7 @@ type
    property UUID: string read GetUUID;
    property CallBackID: string read GetCallBackID;
    property PushID: string read GetPushID;
+   property AuthID: string read GetAuthID;
    property ActiveForm: IPrismForm read GetActiveForm;
    property D2BridgeForms: TList<TObject> read GetD2BridgeForms;
    property D2BridgeInstance: TObject read GetD2BridgeInstance;
@@ -271,6 +274,7 @@ const
  SizeUUID = 12;
  SizeCallBackID = 9;
  SizePushID = 16;
+ SizeAuthID = 19;
 
 implementation
 
@@ -421,6 +425,7 @@ begin
    FUUID:= GenerateRandomString(SizeUUID);
    FCallBackID:= GenerateRandomNumber(SizeCallBackID);
    FPushID:= GenerateRandomString(SizePushID);
+   FAuthID:= GenerateRandomString(SizeAuthID);
    FCreateDate:= now;
 
 {$IFDEF D2BRIDGE}
@@ -1243,6 +1248,11 @@ begin
 
  if Assigned(TD2BridgeClass(D2BridgeBaseClassActive).Form) then
   Result:= (TD2BridgeClass(D2BridgeBaseClassActive).Form as TPrismForm);
+end;
+
+function TPrismSession.GetAuthID: string;
+begin
+ result:= FAuthID;
 end;
 
 function TPrismSession.GetLanguageNav: TD2BridgeLang;

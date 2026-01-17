@@ -106,6 +106,7 @@ begin
 
  FNewUnitForm.Label_ClassType.Caption:= 'D2Bridge Rest API Authentication';
  FNewUnitForm.Edit_ClassName.Text:= 'TAPIAuth';
+ FNewUnitForm.EnableCreateNewUnit:= false;
  FNewUnitForm.ShowModal;
 
  if not FNewUnitForm.EnableCreateNewUnit then
@@ -144,7 +145,7 @@ begin
   vPathWizard + PathDelim +
   'FORMS' + PathDelim +
   'Wizard'  + PathDelim +
-  'RestAPIAuthClass.Laz.pas';
+  'RestAPIAuth.Laz.pas';
 
  vNewFormPASFile:= TStringStream.Create('', TEncoding.UTF8);
  vNewFormPASFile.LoadFromFile(GetRealFilePath(vPathNewFormPas));

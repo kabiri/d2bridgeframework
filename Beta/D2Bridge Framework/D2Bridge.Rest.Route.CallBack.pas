@@ -41,6 +41,9 @@ uses
 
 type
  TD2BridgeRestRouteCallBack = {$IFDEF SUPPORTS_FUNCTION_REFERENCES}reference to {$ENDIF}procedure(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse); //{$IFNDEF SUPPORTS_FUNCTION_REFERENCES} of object{$ENDIF};
+{$IFDEF FPC}
+ TD2BridgeRestRouteMethodCallBack = {$IFDEF SUPPORTS_FUNCTION_REFERENCES}reference to {$ENDIF}procedure(const RestSession: TD2BridgeRestSession; Request: TPrismHTTPRequest; Response: TPrismHTTPResponse) of object;
+{$ENDIF}
  //TPrismRouteCallBack = procedure(const Request: TPrismHTTPRequest; Response: TPrismHTTPResponse) of object;
 
 implementation

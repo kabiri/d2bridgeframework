@@ -12,7 +12,8 @@ uses
   Classes, SysUtils, fpjson,
   Prism.Types,
   D2Bridge.JSON,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 
 implementation
@@ -102,10 +103,10 @@ initialization
  BeforeRestMethod(@OnBeforeRestMethod);
  AfterRestMethod(@OnAfterRestMethod);
  //Register EndPoints
- AddPost('/api/auth/login',        @PostLogin);
- AddPost('/api/auth/refreshtoken', @PostRefreshToken, true); //True -> Require Auth JWT
-  AddGet('/api/auth/currentuser',  @GetCurrentUser, true); //True -> Require Auth JWT
-  AddGet('/api/health',            @Health);
+ AddPost('/api/auth/login',        PostLogin);
+ AddPost('/api/auth/refreshtoken', PostRefreshToken, true); //True -> Require Auth JWT
+  AddGet('/api/auth/currentuser',  GetCurrentUser, true); //True -> Require Auth JWT
+  AddGet('/api/health',            Health);
 
 
 end.

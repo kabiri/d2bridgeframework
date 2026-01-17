@@ -175,15 +175,16 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Commom\D2Bridge.NewProject.Wizard.Common.pas"/>
-        <DCCReference Include="Delphi\D2Bridge.ConfigNewUnit.View.pas">
-            <Form>D2BridgeConfigNewUnitForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="Delphi\D2Bridge.NewRestAPIClassUnit.Wizard.pas"/>
         <DCCReference Include="Delphi\D2Bridge.NewRestAPIUnit.Wizard.pas"/>
         <DCCReference Include="Delphi\D2Bridge.NewRestAPIAuthUnit.Wizard.pas"/>
         <DCCReference Include="Delphi\D2Bridge.NewRestAPISession.Wizard.pas"/>
         <DCCReference Include="Delphi\D2Bridge.BuildEvents.pas"/>
+        <DCCReference Include="Commom\Forms\D2Bridge.ConfigNewUnit.View.pas">
+            <Form>D2BridgeConfigNewUnitForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Delphi\D2Bridge.NewRestAPICrudClassUnit.Wizard.pas"/>
         <RcItem Include="img\Logo D2Bridge 96x96.bmp">
             <ResourceType>BITMAP</ResourceType>
             <ResourceId>ABOUTICON</ResourceId>
@@ -264,6 +265,12 @@
                 <DeployFile LocalName="..\..\..\trunk\Wizard\bpl\22.0\D2BridgeFrameworkWizard.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\..\trunk\Wizard\bpl\D2BridgeFramework4DWeb.bpl" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\..\D2bridge\Wizard\bpl\23.0\D2BridgeFrameworkWizard.bpl" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\bpl\23.0\D2BridgeFrameworkWizard.bpl" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>D2BridgeFrameworkWizard.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>

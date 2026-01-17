@@ -64,7 +64,7 @@ type
  TD2BridgeFormFileCreator = class(TModuleCreatorFile)
  public
    function GetSource: string; override;
-   constructor Create(const ModuleIdent, FormIdent, AncestorIdent: string); override;
+   constructor Create(const ModuleIdent, FormIdent, AncestorIdent, AParameter: string); override;
  end;
 
  TD2BridgeNewFormModule = class(TFormCreatorModule)
@@ -154,8 +154,7 @@ end;
 
 { TD2BridgeFormFileCreator }
 
-constructor TD2BridgeFormFileCreator.Create(const ModuleIdent, FormIdent,
-  AncestorIdent: string);
+constructor TD2BridgeFormFileCreator.Create(const ModuleIdent, FormIdent, AncestorIdent, AParameter: string);
 begin
  inherited;
 end;

@@ -12,7 +12,8 @@ uses
   Classes, SysUtils, fpjson,
   Prism.Types,
   D2Bridge.JSON,
-  D2Bridge.Rest.Server.Functions;
+  D2Bridge.Rest.Server.Functions,
+  D2Bridge.Rest.Session;
 
 
 implementation
@@ -29,7 +30,7 @@ end;
 initialization
 //Register EndPoints
 {
-  AddGet('/api/ping', @GetPing);
+  AddGet('/api/ping', GetPing);
 }
 
 end.

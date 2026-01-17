@@ -48,6 +48,7 @@ uses
  D2Bridge.NewRestAPIClassUnit.Wizard,
  D2Bridge.NewRestAPIUnit.Wizard,
  D2Bridge.NewRestAPIAuthUnit.Wizard,
+ D2Bridge.NewRestAPICrudClassUnit.Wizard,
  D2Bridge.NewRestAPISession.Wizard,
  D2Bridge.NewInheritedForm.Wizard,
  D2Bridge.ConfigNewProject.View,
@@ -83,6 +84,7 @@ begin
   RegisterPackageWizard(TD2BridgeNewRestAPIClassUnitWizard.Create);
   RegisterPackageWizard(TD2BridgeNewRestAPIAuthUnitWizard.Create);
   RegisterPackageWizard(TD2BridgeNewRestAPIUnitWizard.Create);
+  RegisterPackageWizard(TD2BridgeNewRestAPICrudClassUnitWizard.Create);
   RegisterPackageWizard(TD2BridgeNewRestAPISessionWizard.Create);
   RegisterPackageWizard(TD2BridgeNewCRUDWizard.Create);
 

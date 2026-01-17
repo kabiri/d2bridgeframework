@@ -24,7 +24,7 @@ type
     function CrudOnSave: boolean; override;
     function CrudOnDelete: boolean; override;
     function CrudOnBack: boolean; override;
-    function CrudOnClose: boolean; override;		
+    function CrudOnClose: boolean; override;
   public
     { Public declarations }
   end;

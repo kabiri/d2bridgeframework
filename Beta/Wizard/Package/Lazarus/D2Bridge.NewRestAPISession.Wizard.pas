@@ -39,7 +39,7 @@ interface
 
 uses
   Classes, SysUtils, ProjectIntf, Dialogs, LazIDEIntf, DateUtils, Forms,
-  LazFileUtils, System.UITypes,
+  LazFileUtils, ProjPackIntf, System.UITypes,
   D2Bridge.Wizard.Util;
 
 type
@@ -50,6 +50,7 @@ type
  protected
   function Init(var NewFilename: string; NewOwner: TObject; var NewSource: string; Quiet: boolean): TModalResult; override;
   function Initialized({%H-}NewFile: TLazProjectFile): TModalResult; override;
+  procedure AddCustomCompilerDirective;
  public
   constructor Create; override;
   function CreateSource(const Filename     : string;
@@ -71,9 +72,9 @@ begin
  DefaultFilename:= 'D2Bridge.Rest.Session';
  DefaultSourceName:= 'D2Bridge.Rest.Session';
  DefaultFileExt:= '.pas';
- UseCreateFormStatements:= true;
+ UseCreateFormStatements:= True;
  IsPascalUnit:= True;
- Name := 'D2BridgeWizardAPINewUnit4'; //CFileDescritor
+ Name := 'D2BridgeWizardAPINewUnit6'; //CFileDescritor
 end;
 
 function TD2BridgeNewRestAPISessionWizard.Init(var NewFilename: string;
@@ -81,7 +82,7 @@ function TD2BridgeNewRestAPISessionWizard.Init(var NewFilename: string;
 var
  vPathWizard: string;
 begin
- vPathWizard:= ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath))+ PathDelim + 'Wizard';
+ vPathWizard:= ExtractFileDir(ExcludeTrailingPathDelimiter(D2BridgeFrameworkPath)) + PathDelim + 'Wizard';
 
  if (vPathWizard = '') or (not DirectoryExists(vPathWizard)) then
  begin
@@ -91,12 +92,22 @@ begin
  end;
 
  Result:=inherited Init(NewFilename, NewOwner, NewSource, Quiet);
- ResourceClass:= TDataModule;
+
+ //ResourceClass:= TDataModule;
 end;
 
 function TD2BridgeNewRestAPISessionWizard.Initialized(NewFile: TLazProjectFile): TModalResult;
 begin
  Result:=inherited Initialized(NewFile);
+end;
+
+procedure TD2BridgeNewRestAPISessionWizard.AddCustomCompilerDirective;
+begin
+ if LazProject1 = nil then Exit;
+
+ if Pos('-d' + 'D2BridgeCustomRestSession', LazProject1.LazCompilerOptions.CustomOptions) = 0 then
+   LazProject1.LazCompilerOptions.CustomOptions :=
+     Trim(LazProject1.LazCompilerOptions.CustomOptions + ' -d' + 'D2BridgeCustomRestSession');
 end;
 
 function TD2BridgeNewRestAPISessionWizard.CreateSource(const Filename: string;
@@ -133,6 +144,9 @@ begin
    //  [rfReplaceAll, rfIgnoreCase]);
 
  vNewFormPASFile.free;
+
+
+ AddCustomCompilerDirective;
 end;
 
 function TD2BridgeNewRestAPISessionWizard.GetLocalizedName: string;

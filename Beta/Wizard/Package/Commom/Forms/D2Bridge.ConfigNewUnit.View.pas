@@ -75,6 +75,11 @@ type
     Label3: TLabel;
     Label_ClassType: TLabel;
     Edit_ClassName: TEdit;
+    Label4: TLabel;
+    Edit_TableName: TEdit;
+    Panel_Container: TPanel;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormShow(Sender: TObject);
     procedure Label_CloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Label_Button_NextClick(Sender: TObject);
@@ -100,9 +105,12 @@ implementation
 
 procedure TD2BridgeConfigNewUnitForm.Edit_ClassNameExit(Sender: TObject);
 begin
+ if SameText(Label_ClassType.Caption, 'D2Bridge Rest API Crud') then
+  exit;
+
  if Edit_ClassName.Text <> '' then
- if Copy(Edit_ClassName.Text, 1, 1) <> 'T' then
-  Edit_ClassName.Text:= 'T'+ Edit_ClassName.Text;
+  if Copy(Edit_ClassName.Text, 1, 1) <> 'T' then
+   Edit_ClassName.Text:= 'T'+ Edit_ClassName.Text;
 end;
 
 procedure TD2BridgeConfigNewUnitForm.FormCreate(Sender: TObject);
@@ -121,12 +129,21 @@ procedure TD2BridgeConfigNewUnitForm.Label_Button_NextClick(Sender: TObject);
 begin
  Edit_ClassNameExit(Edit_ClassName);
 
- if (Edit_ClassName.Text = '') or (UpperCase(Edit_ClassName.Text) = 'T') then
+ if (Trim(Edit_ClassName.Text) = '') or (UpperCase(Edit_ClassName.Text) = 'T') then
  begin
   showmessage('Enter class name');
   Edit_ClassName.SetFocus;
   exit;
  end;
+
+
+ if Edit_TableName.Visible and (Trim(Edit_TableName.Text) = '') then
+ begin
+  showmessage('Enter Table name');
+  Edit_TableName.SetFocus;
+  exit;
+ end;
+
 
  EnableCreateNewUnit:= true;
 
@@ -136,6 +153,24 @@ end;
 procedure TD2BridgeConfigNewUnitForm.Label_CloseClick(Sender: TObject);
 begin
  self.close;
+end;
+
+procedure TD2BridgeConfigNewUnitForm.FormShow(Sender: TObject);
+begin
+ if not Edit_TableName.Visible then
+ begin
+  self.Height:= self.Height - 40;
+  Label4.Visible:= false;
+ end else
+  Label4.Visible:= true;
+end;
+
+procedure TD2BridgeConfigNewUnitForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+ if not Edit_TableName.Visible then
+ begin
+  self.Height:= self.Height + 40;
+ end;
 end;
 
 end.
