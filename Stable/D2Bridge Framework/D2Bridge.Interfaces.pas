@@ -699,8 +699,8 @@ end;
  end;
 
  ID2BridgeFrameworkItemDBMemo = interface(ID2BridgeFrameworkItem)
- ['{D96D2D9D-2B17-41F8-9764-97840BED63E3}']
- function Dataware : ID2BridgeDatawareDataSource;
+ ['{5F334412-3023-4DD6-BA78-626FDD82D131}']
+  function Dataware : ID2BridgeDatawareDataSource;
  end;
 
  ID2BridgeFrameworkItemDBText = interface(ID2BridgeFrameworkItem)
