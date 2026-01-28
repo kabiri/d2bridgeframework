@@ -87,6 +87,7 @@ type
    FShowError500Page: boolean;
    FSecurity: IPrismOptionSecurity;
    FUseMainThread: Boolean;
+   FLogFileMode: TPrismLogFileMode;
    function GetLanguage: string;
    procedure SetLanguage(AValue: string);
    function GetLoading: Boolean;
@@ -121,6 +122,8 @@ type
    procedure SetLogSecurity(const Value: Boolean);
    function GetLogAccess: Boolean;
    procedure SetLogAccess(const Value: Boolean);
+   function GetLogFileMode: TPrismLogFileMode;
+   procedure SetLogFileMode(const Value: TPrismLogFileMode);
    procedure SetPathLogException(const Value: string);
    function GetPathLogException: string;
    procedure SetCoInitialize(const Value: Boolean);
@@ -181,6 +184,7 @@ type
    property LogException: Boolean read GetLogException write SetLogException;
    property LogSecurity: Boolean read GetLogSecurity write SetLogSecurity;
    property LogAccess: Boolean read GetLogAccess write SetLogAccess;
+   property LogFileMode: TPrismLogFileMode read GetLogFileMode write SetLogFileMode;
    property PathLogException: string read GetPathLogException write SetPathLogException;
    property CoInitialize: boolean read GetCoInitialize write SetCoInitialize;
    property VCLStyles: boolean read GetVCLStyles write SetVCLStyles;
@@ -236,6 +240,7 @@ begin
   FShowError500Page:= IsDebuggerPresent;
   FUseMainThread:= true;
   FLogAccess:= false;
+  FLogFileMode:= lfmPerSession;
 
   FSessionTimeOut:= TimeWaitTimeOutSession div 1000;
   FSessionIdleTimeOut:= TimeWaitIdleSession div 1000;
@@ -469,13 +474,29 @@ function TPrismOptions.LogFile: string;
 var
   vDateTime: string;
 begin
-  vDateTime:= DateTimeToStr(Now);
-  vDateTime:= StringReplace(vDateTime, '-', '_', [rfReplaceAll]);
-  vDateTime:= StringReplace(vDateTime, '/', '_', [rfReplaceAll]);
-  vDateTime:= StringReplace(vDateTime, ':', '_', [rfReplaceAll]);
-  vDateTime:= StringReplace(vDateTime, ' ', '_', [rfReplaceAll]);
+  case FLogFileMode of
+    lfmDaily:
+      Result:= PathLogException + FormatDateTime('yyyy_mm_dd', Now) + '.txt';
+  else
+    begin
+      vDateTime:= DateTimeToStr(Now);
+      vDateTime:= StringReplace(vDateTime, '-', '_', [rfReplaceAll]);
+      vDateTime:= StringReplace(vDateTime, '/', '_', [rfReplaceAll]);
+      vDateTime:= StringReplace(vDateTime, ':', '_', [rfReplaceAll]);
+      vDateTime:= StringReplace(vDateTime, ' ', '_', [rfReplaceAll]);
+      Result:= PathLogException + vDateTime + '.txt';
+    end;
+  end;
+end;
 
-  Result:= PathLogException + vDateTime + '.txt';
+function TPrismOptions.GetLogFileMode: TPrismLogFileMode;
+begin
+  Result:= FLogFileMode;
+end;
+
+procedure TPrismOptions.SetLogFileMode(const Value: TPrismLogFileMode);
+begin
+  FLogFileMode:= Value;
 end;
 
 function TPrismOptions.Security: IPrismOptionSecurity;

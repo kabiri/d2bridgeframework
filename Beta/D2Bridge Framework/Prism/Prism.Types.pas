@@ -209,6 +209,10 @@ type
      secBlockIPLimitConn,
      secBlockIPLimitSession);
 
+ type
+  TPrismLogFileMode =
+    (lfmPerSession = 0,
+     lfmDaily);
 
 type
  TSecuritEventInfo = record

@@ -2039,6 +2039,8 @@ type
    procedure SetLogSecurity(const Value: Boolean);
    function GetLogAccess: Boolean;
    procedure SetLogAccess(const Value: Boolean);
+   function GetLogFileMode: TPrismLogFileMode;
+   procedure SetLogFileMode(const Value: TPrismLogFileMode);
    procedure SetPathLogException(const Value: string);
    function GetPathLogException: string;
    procedure SetSessionTimeOut(const Value: Integer);
@@ -2083,6 +2085,7 @@ type
    property LogException: Boolean read GetLogException write SetLogException;
    property LogSecurity: Boolean read GetLogSecurity write SetLogSecurity;
    property LogAccess: Boolean read GetLogAccess write SetLogAccess;
+   property LogFileMode: TPrismLogFileMode read GetLogFileMode write SetLogFileMode;
    property PathLogException: string read GetPathLogException write SetPathLogException;
    property CoInitialize: boolean read GetCoInitialize write SetCoInitialize;
    property VCLStyles: boolean read GetVCLStyles write SetVCLStyles;

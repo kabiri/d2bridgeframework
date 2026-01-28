@@ -49,7 +49,7 @@ type
     FCriticalSection: TCriticalSection;
     FFileName: string;
   public
-    constructor Create(const FileName: string);
+    constructor Create(const FileName: string; const AAppendIfExists: Boolean = False);
     destructor Destroy; override;
     procedure Log(const SessionIdenty, ErrorForm, ErrorObject, ErrorEvent, ErrorMsg: string);
     procedure LogSecurity(const AEvent: TSecurityEvent; const AIP, AUserAgent, ADescription: string; const AIsIPV6: boolean);
@@ -63,24 +63,38 @@ Uses
 
 { TPrismLog }
 
-constructor TPrismLog.Create(const FileName: string);
+constructor TPrismLog.Create(const FileName: string; const AAppendIfExists: Boolean = False);
 begin
  FFileName:= FileName;
 
  if DirectoryExists(ExtractFileDir(FileName)) then
  begin
   AssignFile(FLogFile, FileName);
-  Rewrite(FLogFile);
-  FCriticalSection := TCriticalSection.Create;
+  if AAppendIfExists and FileExists(FileName) then
+  begin
+   Append(FLogFile);
+   FCriticalSection := TCriticalSection.Create;
 
-  WriteLn(FLogFile, 'D2Bridge Framework');
-  WriteLn(FLogFile, 'by Talis Jonatas Gomes');
-  WriteLn(FLogFile, 'https://www.d2bridge.com.br');
-  WriteLn(FLogFile, '');
-  WriteLn(FLogFile, 'LOG Started in '+DateTimeToStr(Now));
-  if not D2BridgeServerControllerBase.NeedConsole then
-   WriteLn(FLogFile, 'No seed console');
-  WriteLn(FLogFile, '');
+   WriteLn(FLogFile, '');
+   WriteLn(FLogFile, 'LOG Resumed in '+DateTimeToStr(Now));
+   if not D2BridgeServerControllerBase.NeedConsole then
+    WriteLn(FLogFile, 'No seed console');
+   WriteLn(FLogFile, '');
+  end
+  else
+  begin
+   Rewrite(FLogFile);
+   FCriticalSection := TCriticalSection.Create;
+
+   WriteLn(FLogFile, 'D2Bridge Framework');
+   WriteLn(FLogFile, 'by Talis Jonatas Gomes');
+   WriteLn(FLogFile, 'https://www.d2bridge.com.br');
+   WriteLn(FLogFile, '');
+   WriteLn(FLogFile, 'LOG Started in '+DateTimeToStr(Now));
+   if not D2BridgeServerControllerBase.NeedConsole then
+    WriteLn(FLogFile, 'No seed console');
+   WriteLn(FLogFile, '');
+  end;
 
   Flush(FLogFile);
  end;
