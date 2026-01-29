@@ -1136,13 +1136,16 @@ begin
     ServerController.APPConfig.FileINIConfig.WriteInteger('D2Bridge Server Config', 'Server Port', ServerPort);
     ServerController.APPConfig.FileINIConfig.WriteString('D2Bridge Server Config', 'Server Name', ServerController.ServerName);
     ServerController.APPConfig.FileINIConfig.WriteString('D2Bridge Server Config', 'Server Description', ServerController.ServerName);
+
+    if SameText(ServerController.APPConfig.FileINIConfig.ReadString('D2Bridge Log', 'LogFileMode', 'session'), 'daily') then
+     FPrismOptions.LogFileMode:= lfmDaily;
    end;
   {$ENDREGION}
 
   FPrismThreadServerTCP.Port:= ServerPort;
 
   if (FPrismOptions.LogException) or (FPrismOptions.LogSecurity) then
-   FPrismLog:= TPrismLog.Create(FPrismOptions.LogFile);
+   FPrismLog:= TPrismLog.Create(FPrismOptions.LogFile, FPrismOptions.LogFileMode = lfmDaily);
 
   if not DirectoryExists(Options.RootDirectory) then
   MkDir(Options.RootDirectory);

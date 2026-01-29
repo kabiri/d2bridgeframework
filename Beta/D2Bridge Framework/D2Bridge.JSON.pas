@@ -546,7 +546,13 @@ begin
   try
    for I:= 0 to Pred(Count) do
    begin
-     if SameText({$IFDEF HAS_UNIT_SYSTEM_JSON}Pairs[I].JsonString.Value{$ELSE}Names[I]{$ENDIF}, APath) then
+     var cmp_string:string;
+     {$IFDEF HAS_UNIT_SYSTEM_JSON}
+       cmp_string:=Pairs[I].JsonString.Value;
+     {$ELSE}
+       cmp_string:=Names[I];
+     {$ENDIF}
+     if SameText(cmp_string, APath) then
      begin
  {$IFNDEF FPC}
    {$IFDEF HAS_UNIT_SYSTEM_JSON}
@@ -797,7 +803,7 @@ begin
                 //lJSONWriter.WritePropertyName(ADataSet.Fields[lCols].FieldName);
                 if ADataSet.Fields[lCols].IsNull then
                   case ADataSet.Fields[lCols].DataType of
-                    // númericos
+                    // nÃºmericos
                     ftFloat{$IFDEF SUPPORTS_FTEXTENDED}, ftCurrency, ftExtended{$ENDIF}, ftFMTBcd,
                     ftSmallint{$IFDEF SUPPORTS_FTEXTENDED}, ftShortint, ftSingle{$ENDIF}, ftWord, ftInteger, ftAutoInc,
                     ftLargeint{$IFDEF SUPPORTS_FTEXTENDED}, ftLongWord{$ENDIF}, ftBCD:
@@ -877,7 +883,7 @@ begin
                         else
                           lJSONObject.AddPair(lColName, GetTJSONFalse);
                       end;
-                    // númericos
+                    // nÃºmericos
                     ftFloat{$IFDEF SUPPORTS_FTEXTENDED}, ftExtended{$ENDIF}, ftFMTBcd, ftBCD:
                     begin
                       if (ADataSet.Fields[lCols] as TNumericField).DisplayFormat <> '' then
@@ -1226,7 +1232,7 @@ begin
   begin
    Total := Self.RecordCount;
 
-   // Calcular o número real de registros retornados
+   // Calcular o nÃºmero real de registros retornados
    if (AOffset >= Total) then
     Count := 0
    else if (AMaxRecords = 0) or (AOffset + AMaxRecords > Total) then

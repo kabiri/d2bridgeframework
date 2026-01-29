@@ -169,6 +169,7 @@ begin
     Persian: Result := 'fa-IR';
     Thai: Result := 'th-TH';
     Ukrainian: Result := 'uk-UA';
+    Polish: Result := 'pl-PL';
   else
     Result := '';
   end;

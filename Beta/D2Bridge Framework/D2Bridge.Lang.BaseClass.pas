@@ -227,11 +227,13 @@ begin
   {$REGION 'Load JSON from File PATH'}
    if not FD2BridgeLangCoreBaseClass.EmbedJSON then
    begin
-    if FileExists(FD2BridgeLangCoreBaseClass.PathJSON + FD2BridgeLang.HTMLLang + '.json') then
+    var json_file_to_load:string;
+    json_file_to_load:=FD2BridgeLangCoreBaseClass.PathJSON + FD2BridgeLang.HTMLLang + '.json';
+    if FileExists(json_file_to_load) then
     begin
      sFile:= TStringStream.Create('', TEncoding.UTF8);
-     sFile.LoadFromFile(FD2BridgeLangCoreBaseClass.PathJSON + FD2BridgeLang.HTMLLang + '.json');
-
+     sFile.LoadFromFile(json_file_to_load);
+     
      FJSONResourceLang := TJSONObject.ParseJSONValue(sFile.DataString) as TJSONObject;
 
      sFile.Clear;
