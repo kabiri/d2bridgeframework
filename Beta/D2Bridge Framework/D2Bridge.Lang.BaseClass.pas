@@ -169,10 +169,11 @@ end;
 procedure TD2BridgeLangBaseClass.LoadJSONfromResource;
 var
   JSONResouceName: String;
-  ResInfo:         {$IFNDEF FPC}HRSRC{$ELSE}TLResource{$ENDIF};
-  ResStream:       {$IFNDEF FPC}TResourceStream{$ELSE}TLazarusResourceStream{$ENDIF};
-  JSONContent:     TStringStream;
-  sFile:           TStringStream;
+  ResInfo:           {$IFNDEF FPC}HRSRC{$ELSE}TLResource{$ENDIF};
+  ResStream:         {$IFNDEF FPC}TResourceStream{$ELSE}TLazarusResourceStream{$ENDIF};
+  JSONContent:       TStringStream;
+  sFile:             TStringStream;
+  json_file_to_load: string;
 begin
  try
   {$REGION 'Embed JSON (Resource)'}
@@ -227,7 +228,6 @@ begin
   {$REGION 'Load JSON from File PATH'}
    if not FD2BridgeLangCoreBaseClass.EmbedJSON then
    begin
-    var json_file_to_load:string;
     json_file_to_load:=FD2BridgeLangCoreBaseClass.PathJSON + FD2BridgeLang.HTMLLang + '.json';
     if FileExists(json_file_to_load) then
     begin

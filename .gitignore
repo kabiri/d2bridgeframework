@@ -24,3 +24,15 @@ __recovery/
 
 # Castalia statistics file (since XE7 Castalia is distributed with Delphi)
 *.stat
+Beta/Demos/Lazarus/Lazarus.dbg
+Beta/Demos/Lazarus/Lazarus.exe
+/Beta/Demos/Lazarus/lib
+Beta/Demos/Lazarus/web/Lazarus.dbg
+Beta/Demos/Lazarus/web/Lazarus.exe
+Beta/Demos/Lazarus/web/Config.ini
+/Beta/Demos/Lazarus/web/wwwroot
+/Stable/Demos/Lazarus/lib
+/Stable/Demos/Lazarus/backup
+/Beta/D2Bridge Framework/backup
+Stable/Demos/Lazarus/web/Lazarus.dbg
+Stable/Demos/Lazarus/web/Lazarus.exe

@@ -2155,27 +2155,27 @@ LazarusResources.Add('D2Bridge_Lang_pl_PL','JSON',[
   +'sionIdleTimeOut": "Twoja sesja wkr'#195#179'tce zostanie zako'#197#132'czon'
   +'a z powodu braku aktywno'#197#155'ci"'#13#10'    },'#13#10'    "Error429": '
   +'{'#13#10'        "Title": "Zbyt wiele po'#197#130#196#133'cze'#197#132'",'
-  +#13#10'        "Text1": "Przekrono limit po'#197#130#196#133'cze'#197#132'. '
-  +'Prosz'#196#153' czeka'#196#135'",'#13#10'        "Text2": "sekund, na kolej'
-  +'n'#196#133' pr'#195#179'be po'#197#130#196#133'czenia."'#13#10'    },'#13#10
-  +'    "ErrorBlacklist": {'#13#10'        "Title": "Adres IP Zablokowany",'#13
-  +#10'        "SubTitle1": "Tw'#195#179'j adres IP",'#13#10'        "SubTitle2'
-  +'": "znajduje si'#196#153' aktualnie na czarnej li'#197#155'cie. Je'#197#155
-  +'li uwa'#197#188'asz, '#197#188'e jest to b'#197#130#196#133'd, mo'#197#188
-  +'esz poprosi'#196#135' o usuni'#196#153'cie z listy, wpisuj'#196#133'c poni'
-  ,#197#188'ej sw'#195#179'j adres IP.",'#13#10'        "YourIP" : "Tw'#195#179
-  +'j adres IP",'#13#10'        "DelistIP" : "Usu'#197#132' IP z listy",'#13#10
-  +'        "MsgTimeOut" : "Sesja wygas'#197#130'a. Kliknij OK, aby od'#197#155
-  +'wie'#197#188'y'#196#135' stron'#196#153' i spr'#195#179'bowa'#196#135' pono'
-  +'wnie.",'#13#10'        "MsgWrongIP" : "Adres IP wydaje si'#196#153' by'#196
-  +#135' niepoprawny",'#13#10'        "MsgDelistSuccess" : "Pomy'#197#155'lnie '
-  +'przetworzono '#197#188#196#133'danie usuni'#196#153'cia IP ${ipAddress} z l'
-  +'isty. Od'#197#155'wie'#197#188'anie...",'#13#10'        "MsgDelistFailed" :'
-  +' "Nie uda'#197#130'o si'#196#153' przetworzy'#196#135' '#197#188#196#133'da'
-  +'nia usuni'#196#153'cia IP ${ipAddress} z listy. Spr'#195#179'buj ponownie p'
-  +#195#179#197#186'niej.",'#13#10'        "MsgDelistError" : "Wyst'#196#133'pi'
-  +#197#130' b'#197#130#196#133'd podczas przetwarzania '#197#188#196#133'dania'
-  +'. Spr'#195#179'buj ponownie p'#195#179#197#186'niej.",'#13#10'        "MsgI'
-  +'nvalidIp" : "Nieprawid'#197#130'owy adres IP. Sprawd'#197#186' i spr'#195
-  +#179'buj ponownie."'#13#10'    }    '#13#10'}'
+  +#13#10'        "Text1": "Przekroczono limit po'#197#130#196#133'cze'#197#132
+  +'. Prosz'#196#153' czeka'#196#135'",'#13#10'        "Text2": "sekund, na kol'
+  +'ejn'#196#133' pr'#195#179'be po'#197#130#196#133'czenia."'#13#10'    },'#13
+  +#10'    "ErrorBlacklist": {'#13#10'        "Title": "Adres IP Zablokowany",'
+  +#13#10'        "SubTitle1": "Tw'#195#179'j adres IP",'#13#10'        "SubTit'
+  +'le2": "znajduje si'#196#153' aktualnie na czarnej li'#197#155'cie. Je'#197
+  +#155'li uwa'#197#188'asz, '#197#188'e jest to b'#197#130#196#133'd, mo'#197
+  +#188'esz poprosi'#196#135' o usuni'#196#153'cie z listy, wpisuj'#196#133'c p'
+  ,'oni'#197#188'ej sw'#195#179'j adres IP.",'#13#10'        "YourIP" : "Tw'#195
+  +#179'j adres IP",'#13#10'        "DelistIP" : "Usu'#197#132' IP z listy",'#13
+  +#10'        "MsgTimeOut" : "Sesja wygas'#197#130'a. Kliknij OK, aby od'#197
+  +#155'wie'#197#188'y'#196#135' stron'#196#153' i spr'#195#179'bowa'#196#135' '
+  +'ponownie.",'#13#10'        "MsgWrongIP" : "Adres IP wydaje si'#196#153' by'
+  +#196#135' niepoprawny",'#13#10'        "MsgDelistSuccess" : "Pomy'#197#155'l'
+  +'nie przetworzono '#197#188#196#133'danie usuni'#196#153'cia IP ${ipAddress}'
+  +' z listy. Od'#197#155'wie'#197#188'anie...",'#13#10'        "MsgDelistFaile'
+  +'d" : "Nie uda'#197#130'o si'#196#153' przetworzy'#196#135' '#197#188#196#133
+  +'dania usuni'#196#153'cia IP ${ipAddress} z listy. Spr'#195#179'buj ponownie'
+  +' p'#195#179#197#186'niej.",'#13#10'        "MsgDelistError" : "Wyst'#196#133
+  +'pi'#197#130' b'#197#130#196#133'd podczas przetwarzania '#197#188#196#133'd'
+  +'ania. Spr'#195#179'buj ponownie p'#195#179#197#186'niej.",'#13#10'        "'
+  +'MsgInvalidIp" : "Nieprawid'#197#130'owy adres IP. Sprawd'#197#186' i spr'
+  +#195#179'buj ponownie."'#13#10'    }    '#13#10'}'
 ]);
