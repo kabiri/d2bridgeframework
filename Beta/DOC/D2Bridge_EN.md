@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![D2Bridge Logo](https://d2bridge.com.br/assets/logo.png)
+![D2Bridge Logo](/assets/LogoD2BridgeTransp.png)
 
 [![License: LGPL 2.1](https://img.shields.io/badge/License-LGPL%202.1-blue.svg)](https://opensource.org/licenses/LGPL-2.1)
 [![Delphi](https://img.shields.io/badge/Delphi-10.0--13.0-orange.svg)](https://www.embarcadero.com/products/delphi)

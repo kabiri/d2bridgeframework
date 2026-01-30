@@ -1,4 +1,4 @@
-<![CDATA[# 🌐 D2Bridge Framework - Nieoficjalna Encyklopedia
+# 🌐 D2Bridge Framework - Nieoficjalna Encyklopedia
 
 <div align="center">
 
@@ -1576,4 +1576,3 @@ CREATE TABLE participant (
 *D2Bridge Framework - LGPL 2.1*
 
 </div>
-]]>
