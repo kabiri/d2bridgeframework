@@ -1,6 +1,9 @@
 # SVN cvs folder
 .svn
 
+# CLAUDE AI folder
+.claude
+
 # Delphi compiler generated files, safe to delete
 *.dcu
 *.map

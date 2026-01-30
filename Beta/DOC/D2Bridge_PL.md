@@ -159,13 +159,13 @@ Password=YourPassword
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Kluczowe:** Sesja ≠ Wątek. Obiekty są powiązane z `TPrismaSession`, nie z wątkiem.
+> **Kluczowe:** Sesja ≠ Wątek. Obiekty są powiązane z `TPrismSession`, nie z wątkiem.
 
 ### Klasa Projektu (Session)
 
 ```pascal
 type
-  TD2Checkin = class(TD2BridgePrismaSessionBase)
+  TD2Checkin = class(TPrismSessionBase)
   public
     const FILE_PATH = 'files\';
     const FILE_PATH_IMAGES = 'files\images\';
@@ -190,7 +190,7 @@ type
 // Globalna funkcja dostępu
 function D2Checkin: TD2Checkin;
 begin
-  Result := TD2Checkin(D2BridgeServerController.PrismaSession);
+  Result := TD2Checkin(D2BridgeInstance.PrismSession.Data);
 end;
 ```
 
@@ -362,7 +362,7 @@ end;
 
 ```pascal
 type
-  TAdminPageTemplate = class(TD2BridgePrismaFormClass)
+  TAdminPageTemplate = class(TD2BridgePrismForm)
   protected
     procedure Callback(const ACallbackName: string;
       AEventParsing: ID2BridgeEventParsing); override;
@@ -696,14 +696,14 @@ CrudPermissions := [cpSearch];  // Tylko podgląd
 ### Dodawanie Przycisków do GRID
 
 ```pascal
-procedure TFormEvents.InitControlsD2Bridge(APrismControl: ID2BridgePrismControl);
+procedure TFormEvents.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
   inherited;
   
-  if APrismControl.VCLComponent = DBGridSearch then
+  if PrismControl.VCLComponent = DBGridSearch then
   begin
     // Dodaj kolumnę z przyciskami
-    with APrismControl.Columns.Add do
+    with PrismControl.Columns.Add do
     begin
       Index := 0;
       Width := 78;  // ~26px na przycisk
@@ -739,15 +739,15 @@ end;
 ### Formatowanie Kolumn GRID
 
 ```pascal
-procedure TFormUsers.InitControlsD2Bridge(APrismControl: ID2BridgePrismControl);
+procedure TFormUsers.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
   inherited;
   
-  if APrismControl.VCLComponent is TDBGrid then
+  if PrismControl.VCLComponent is TDBGrid then
   begin
-    if APrismControl.FieldName = 'is_confirmed' then
+    if PrismControl.FieldName = 'is_confirmed' then
     begin
-      APrismControl.HTML := 
+      PrismControl.HTML := 
         '<span class="badge ' +
         '${value == "yes" ? "bg-success" : "bg-danger"}"' +
         ' style="border-radius: 50px; padding: 5px 10px;">' +
@@ -783,7 +783,7 @@ implementation
 
 function DM: TDM;
 begin
-  Result := TD2BridgeInstance.GetInstance<TDM>;
+  Result := TDM(D2BridgeInstance.GetInstance(TDM));
 end;
 ```
 
@@ -796,8 +796,10 @@ uses
 
 procedure TD2Checkin.OpenDM;
 begin
-  CoInitialize(nil);  // Tylko SQL Server!
-  TD2BridgeInstance.CreateInstance<TDM>;
+  CoInitializeEx(0, COINIT_MULTITHREADED);  // Tylko SQL Server!
+
+  if DM = nil then
+    D2BridgeInstance.CreateInstance(TDM);
 end;
 ```
 
@@ -1217,21 +1219,21 @@ end;
 ### Maski Pól
 
 ```pascal
-procedure TFormAccount.InitControlsD2Bridge(APrismControl: ID2BridgePrismControl);
+procedure TFormAccount.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
   inherited;
   
   // Maska CNPJ (Brazylia)
-  if APrismControl.VCLComponent = DBEditDocument then
-    TDBEdit(APrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCNPJ;
+  if PrismControl.VCLComponent = DBEditDocument then
+    TDBEdit(PrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCNPJ;
   
   // Maska CEP (Brazylia)
-  if APrismControl.VCLComponent = DBEditPostalCode then
-    TDBEdit(APrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCEP;
+  if PrismControl.VCLComponent = DBEditPostalCode then
+    TDBEdit(PrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCEP;
   
   // Własna maska
-  if APrismControl.VCLComponent = DBEditPhone then
-    TDBEdit(APrismControl.VCLComponent).EditMask := 
+  if PrismControl.VCLComponent = DBEditPhone then
+    TDBEdit(PrismControl.VCLComponent).EditMask := 
       '{"mask": "(99) 99999-9999", "autoUnmask": true}';
 end;
 ```

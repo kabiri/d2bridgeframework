@@ -159,13 +159,13 @@ Password=YourPassword
 └─────────────────────────────────────────────────────────────┘
 ```
 
-> **Key:** Session ≠ Thread. Objects are bound to `TPrismaSession`, not to thread.
+> **Key:** Session ≠ Thread. Objects are bound to `TPrismSession`, not to thread.
 
 ### Project Class (Session)
 
 ```pascal
 type
-  TD2Checkin = class(TD2BridgePrismaSessionBase)
+  TD2Checkin = class(TPrismSessionBase)
   public
     const FILE_PATH = 'files\';
     const FILE_PATH_IMAGES = 'files\images\';
@@ -190,7 +190,7 @@ type
 // Global access function
 function D2Checkin: TD2Checkin;
 begin
-  Result := TD2Checkin(D2BridgeServerController.PrismaSession);
+  Result := TD2Checkin(D2BridgeInstance.PrismSession.Data);
 end;
 ```
 
@@ -362,7 +362,7 @@ end;
 
 ```pascal
 type
-  TAdminPageTemplate = class(TD2BridgePrismaFormClass)
+  TAdminPageTemplate = class(TD2BridgePrismForm)
   protected
     procedure Callback(const ACallbackName: string;
       AEventParsing: ID2BridgeEventParsing); override;
@@ -696,14 +696,14 @@ CrudPermissions := [cpSearch];  // View only
 ### Adding Buttons to GRID
 
 ```pascal
-procedure TFormEvents.InitControlsD2Bridge(APrismControl: ID2BridgePrismControl);
+procedure TFormEvents.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
   inherited;
   
-  if APrismControl.VCLComponent = DBGridSearch then
+  if PrismControl.VCLComponent = DBGridSearch then
   begin
     // Add column with buttons
-    with APrismControl.Columns.Add do
+    with PrismControl.Columns.Add do
     begin
       Index := 0;
       Width := 78;  // ~26px per button
@@ -761,7 +761,7 @@ implementation
 
 function DM: TDM;
 begin
-  Result := TD2BridgeInstance.GetInstance<TDM>;
+  Result := TDM(D2BridgeInstance.GetInstance(TDM));
 end;
 ```
 
@@ -774,8 +774,10 @@ uses
 
 procedure TD2Checkin.OpenDM;
 begin
-  CoInitialize(nil);  // SQL Server only!
-  TD2BridgeInstance.CreateInstance<TDM>;
+  CoInitializeEx(0, COINIT_MULTITHREADED);  // SQL Server only!
+
+  if DM = nil then
+    D2BridgeInstance.CreateInstance(TDM);
 end;
 ```
 
@@ -1047,17 +1049,17 @@ end;
 ### Field Masks
 
 ```pascal
-procedure TFormAccount.InitControlsD2Bridge(APrismControl: ID2BridgePrismControl);
+procedure TFormAccount.InitControlsD2Bridge(const PrismControl: TPrismControl);
 begin
   inherited;
   
   // CNPJ mask (Brazil)
-  if APrismControl.VCLComponent = DBEditDocument then
-    TDBEdit(APrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCNPJ;
+  if PrismControl.VCLComponent = DBEditDocument then
+    TDBEdit(PrismControl.VCLComponent).EditMask := TD2BridgePrismTMask.BrasilCNPJ;
   
   // Custom mask
-  if APrismControl.VCLComponent = DBEditPhone then
-    TDBEdit(APrismControl.VCLComponent).EditMask := 
+  if PrismControl.VCLComponent = DBEditPhone then
+    TDBEdit(PrismControl.VCLComponent).EditMask := 
       '{"mask": "(99) 99999-9999", "autoUnmask": true}';
 end;
 ```
