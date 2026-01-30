@@ -533,6 +533,7 @@ function TJSONObjectHelper.GetValue(const APath: string): TJSONValue;
 var
  I: Integer;
  aCaseInsensitive: Boolean;
+ cmp_string:string;
 begin
  result:= nil;
 
@@ -546,7 +547,6 @@ begin
   try
    for I:= 0 to Pred(Count) do
    begin
-     var cmp_string:string;
      {$IFDEF HAS_UNIT_SYSTEM_JSON}
        cmp_string:=Pairs[I].JsonString.Value;
      {$ELSE}
