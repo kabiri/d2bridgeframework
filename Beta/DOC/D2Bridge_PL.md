@@ -67,18 +67,27 @@ D2Bridge to framework open-source umożliwiający konwersję aplikacji napisanyc
 
 ### Obsługiwane Języki (Tłumaczenia)
 
-D2Bridge natywnie obsługuje 9 języków:
+D2Bridge natywnie obsługuje 18 języków:
 
 | Kod | Język |
 |-----|-------|
-| `PT_BR` | Portugalski (Brazylia) |
+| `AR_SA` | Arabski (Arabia Saudyjska) |
+| `CS_CZ` | Czeski |
+| `DE_DE` | Niemiecki |
 | `EN_US` | Angielski (USA) |
 | `ES_ES` | Hiszpański |
+| `FA_IR` | Perski (Iran) |
 | `FR_FR` | Francuski |
-| `DE_DE` | Niemiecki |
 | `IT_IT` | Włoski |
+| `JA_JP` | Japoński |
+| `KO_KR` | Koreański |
 | `PL_PL` | Polski |
+| `PT_BR` | Portugalski (Brazylia) |
+| `RO_RO` | Rumuński |
 | `RU_RU` | Rosyjski |
+| `TH_TH` | Tajski |
+| `TR_TR` | Turecki |
+| `UK_UA` | Ukraiński |
 | `ZH_CN` | Chiński (Uproszczony) |
 
 ---
@@ -97,7 +106,7 @@ File → New → Other → D2Bridge Framework → D2Bridge Framework Delphi Proj
 |----------|----------|------|
 | **Nazwa** | `D2Checkin` | Nazwa projektu |
 | **Port** | `8888` | Port serwera HTTP |
-| **Platforma** | `Web+VCL` | Tryb działania |
+| **Platforma** | `Web+VCL` | `Web`, `Web+VCL`, `Web+LCL`, `Web+FMX` |
 | **Typ** | `Server Console` | Typ aplikacji |
 
 ### Struktura Katalogów
@@ -307,7 +316,8 @@ end;
 ```pascal
 // Callback zamknięcia
 if SameText(ACallbackName, 'close_session') then
-  D2BridgeServerController.CloseSession;
+  Session.Close;
+  // lub Session.Close(false/true);
 ```
 
 ---
@@ -321,10 +331,10 @@ if SameText(ACallbackName, 'close_session') then
 │           MASTER TEMPLATE               │
 │  ┌─────────┐  ┌──────────────────────┐  │
 │  │ SIDEBAR │  │    PAGE TEMPLATE     │  │
-│  │  MENU   │  │   ({{PrismPage}})    │  │
+│  │  MENU   │  │   ($prismpage)       │  │
 │  │         │  │   ┌──────────────┐   │  │
 │  │         │  │   │ PRISM BODY   │   │  │
-│  │         │  │   │ (komponenty) │   │  │
+│  │         │  │   │ ($prismbody) │   │  │
 │  └─────────┘  └──────────────────────┘  │
 └─────────────────────────────────────────┘
 ```
@@ -358,7 +368,7 @@ begin
 end;
 ```
 
-### Klasa Template (Prisma Form)
+### Klasa Template (Prism Form)
 
 ```pascal
 type
@@ -387,19 +397,28 @@ end;
 #### Podstawowa Składnia
 
 ```pascal
-procedure TFormExample.ExportD2Bridge;
+procedure TForm_Checkout.ExportD2Bridge;
 begin
   inherited;
-  
-  // Pojedynczy komponent
-  D2Bridge.Items.Add.VCLObj(EditName);
-  
-  // Komponent z klasą CSS
-  D2Bridge.Items.Add.VCLObj(EditName, CSSClass.Col.ColMD6);
-  
-  // FormGroup z etykietą
-  D2Bridge.Items.Add.FormGroup('{{_name_}}', CSSClass.Col.ColMD6)
-    .AddVCLObj(DBEditName);
+
+  Title := 'My D2Bridge Form';
+
+  //TemplateClassForm := TD2BridgeFormTemplate;
+  D2Bridge.FrameworkExportType.TemplateMasterHTMLFile := '';
+  D2Bridge.FrameworkExportType.TemplatePageHTMLFile := '';
+
+  with D2Bridge.Items.Add do
+  begin
+    with Row.Items.Add do
+      with ColAuto.Items.Add do
+      begin
+        VCLObj(Label_TagName);
+        VCLObj(DBText_TagName);
+      end;
+
+    with Row.Items.Add do
+      Col8.Add.LCLObj(Image_Product);
+  end;
 end;
 ```
 
@@ -444,37 +463,40 @@ end;
 ### Card
 
 ```pascal
-with D2Bridge.Items.Add.Card do
+with Card do
 begin
-  // Header (opcjonalny)
-  Header.Items.Add.VCLObj(LabelTitle);
-  
-  // Body (główna zawartość)
-  with Items.Add do
-    Row.Items.Add.FormGroup('Nazwa').AddVCLObj(EditName);
-  
-  // Footer (przyciski)
-  with Footer.Items.Add do
+  CSSClasses := CSSClass.Card.Card_Center_ExtraLarge;
+
+  Header('My Text');
+
+  with BodyItems.Add do
   begin
-    Row.Items.Add.VCLObj(ButtonSave);
-    Row.Items.Add.VCLObj(ButtonCancel);
+    with Row.Items.Add do
+    begin
+      Col6.Add.FormGroup(Label_FullName).AddLCLObj(DBEdit_FullName, 'ValidationAccount', true);
+      Col6.Add.FormGroup(Label_Doc).AddLCLObj(DBEdit_Doc);
+    end;
+    // ...
   end;
+
+  with Footer.Items.Add do
+    with Row.Items.Add do
+    begin
+      ColAuto.Add.LCLObj(Button_Save, 'ValidationAccount', false, CSSClass.Button.save);
+    end;
 end;
 ```
 
 ### Div
 
 ```pascal
-with D2Bridge.Items.Add.Div(CSSClass.Col.ColMD4) do
+with D2Bridge.Items.Add do
 begin
-  // Zawartość diva
-  Items.Add.VCLObj(Component);
-end;
-
-// Div z CSS i ID
-with D2Bridge.Items.Add.Div('custom-class', 'divId') do
-begin
-  // ...
+  with HTMLDIV('myClass').Items.Add do
+  begin
+    // Zawartość diva
+    VCLObj(Component);
+  end;
 end;
 ```
 
@@ -892,7 +914,7 @@ begin
   EmailBody := TStringList.Create;
   try
     EmailBody.LoadFromFile(
-      D2BridgeServerController.PrismaOptions.RootDirectory + 
+      D2BridgeServerController.PrismOptions.RootDirectory + 
       'mail\email_template.html',
       TEncoding.UTF8  // ⚠️ WAŻNE dla polskich znaków!
     );
@@ -980,9 +1002,9 @@ procedure TFormLogin.FormActivate(Sender: TObject);
 var
   TokenValue: string;
 begin
-  if D2BridgeServerController.PrismaSession.URI.QueryParams.Count > 0 then
+  if D2BridgeServerController.PrismSession.URI.QueryParams.Count > 0 then
   begin
-    TokenValue := D2BridgeServerController.PrismaSession.URI.QueryParams.Values['token'];
+    TokenValue := D2BridgeServerController.PrismSession.URI.QueryParams.Values['token'];
     
     if TokenValue <> '' then
     begin
@@ -1009,7 +1031,7 @@ begin
       end;
       
       // Wyczyść parametry URL
-      D2BridgeServerController.PrismaSession.URI.QueryParams.Clear;
+      D2BridgeServerController.PrismSession.URI.QueryParams.Clear;
     end;
   end;
 end;
@@ -1283,7 +1305,8 @@ end;
 
 ```pascal
 // Kończy WSZYSTKO: wątki, formularze, DM, zmienne
-D2BridgeServerController.CloseSession;
+Session.Close;
+// lub Session.Close(false/true);
 ```
 
 ### Bezpieczeństwo Plików
@@ -1404,6 +1427,47 @@ begin
 end;
 ```
 
+### 8. Szyfrowane Połączenia TLS/SSL
+
+D2Bridge obsługuje szyfrowane połączenia TLS. Aby włączyć TLS, należy:
+
+1. Dodać `IdSSLOpenSSLHeaders` do klauzuli `uses`.
+2. Wskazać OpenSSL katalog z wymaganymi bibliotekami DLL (`ssleay32.dll` i `libeay32.dll`):
+
+```pascal
+uses
+  IdSSLOpenSSLHeaders;
+
+// Ustaw ścieżkę do bibliotek SSL (musi odpowiadać docelowej architekturze)
+IdOpenSSLSetLibPath('C:\Sciezka\Do\SSL\DLLs');
+```
+
+> **Uwaga:** TLS nie będzie działać, jeśli `IdSSLOpenSSLHeaders` nie znajduje się w klauzuli `uses` lub ścieżka do bibliotek SSL nie jest poprawnie ustawiona.
+
+### 9. Auto-Tłumaczenie Elementów Nawigacji GUI
+
+Aby włączyć automatyczne tłumaczenie wbudowanych elementów nawigacji GUI (np. podpisów przycisków), użyj tagów tłumaczeń z kontekstem w podpisach:
+
+```
+{{_Button,CaptionOpen_}}
+{{_Button,CaptionRefresh_}}
+```
+
+Następnie dodaj `D2Bridge.Lang.Core` do klauzuli `uses` i nadpisz `TagTranslate`:
+
+```pascal
+uses
+  D2Bridge.Lang.Core;
+
+procedure TForm1.TagTranslate(const Language: TD2BridgeLang;
+  const AContext: string; const ATerm: string; var ATranslated: string);
+begin
+  inherited;
+  ATranslated := D2BridgeLangCore.LangByTD2BridgeLang(Language)
+    .Language.Translate(AContext, ATerm);
+end;
+```
+
 ---
 
 ## 🔧 Rozwiązywanie Problemów
@@ -1440,6 +1504,12 @@ end;
 ```html
 <PrismPopup name="PopupName"></PrismPopup>
 ```
+
+### Przeglądarka przekierowuje na d2bridge.com.br
+
+**Przyczyna:** Brak pliku `favicon.ico` w katalogu `wwwroot/`. Framework wykonuje przekierowanie 301 na `https://d2bridge.com.br/favicon.ico`.
+
+**Rozwiązanie:** Umieść własny plik `favicon.ico` w katalogu `wwwroot/`.
 
 ### Formularz nie dziedziczy stylu
 
@@ -1541,7 +1611,7 @@ CREATE TABLE participant (
 
 ### Użyte Mechaniki D2Bridge
 
-- ✅ System tłumaczeń (9 języków)
+- ✅ System tłumaczeń (18 języków)
 - ✅ Callbacki z parametrami
 - ✅ Master/Page Template
 - ✅ CRUD z dziedziczeniem
