@@ -748,10 +748,6 @@ a.d2bridgesidemenu-link {
     text-indent: 90px;
 }
 
-.d2bridgesidemenu.collapsed {
-    margin-inline-start: -264px;
-}
-
 @media (max-width:767.98px) {
     .d2bridgesidemenu {
         transform: translateX(-100%);
